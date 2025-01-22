@@ -6,14 +6,14 @@
 #    By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/22 13:58:07 by seayeo            #+#    #+#              #
-#    Updated: 2025/01/22 15:49:04 by seayeo           ###   ########.fr        #
+#    Updated: 2025/01/22 17:37:02 by seayeo           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = megaphone
-CC = g++
+NAME = phone
+CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
-SRCS = megaphone.cpp
+SRCS = phonebook.cpp contact.cpp main.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 all: $(NAME)
