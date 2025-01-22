@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 16:55:14 by seayeo            #+#    #+#             */
-/*   Updated: 2025/01/22 16:55:23 by seayeo           ###   ########.fr       */
+/*   Updated: 2025/01/22 17:51:46 by seayeo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int main() {
         if (command == "EXIT") {
             break;
         } else if (command == "ADD") {
-            phonebook.add();
+            Contact contact = create_contact();
+            phonebook.add(contact);
         } else if (command == "SEARCH") {
             phonebook.search();
         } else {
