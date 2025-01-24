@@ -6,14 +6,14 @@
 #    By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/22 13:58:07 by seayeo            #+#    #+#              #
-#    Updated: 2025/01/22 17:37:02 by seayeo           ###   ########.fr        #
+#    Updated: 2025/01/24 13:59:42 by seayeo           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = phone
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
-SRCS = phonebook.cpp contact.cpp main.cpp
+SRCS = PhoneBook.cpp Contact.cpp Main.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 all: $(NAME)

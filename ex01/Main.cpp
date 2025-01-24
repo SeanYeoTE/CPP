@@ -6,30 +6,37 @@
 /*   By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 16:55:14 by seayeo            #+#    #+#             */
-/*   Updated: 2025/01/22 17:51:46 by seayeo           ###   ########.fr       */
+/*   Updated: 2025/01/24 13:59:20 by seayeo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
-#include "contact.hpp"
-#include "phonebook.hpp"
+#include "Contact.hpp"
+#include "PhoneBook.hpp"
 
 int main() {
     Phonebook phonebook;
     std::string command;
 
-    while (1) {
-        std::cout << "Enter a command: ";
-        std::getline(std::cin, command);
+    std::cout << "Welcome to PhoneBook!" << std::endl;
+    std::cout << "Available commands: ADD, SEARCH, EXIT" << std::endl;
+
+    while (true) {
+        std::cout << "\nEnter a command: ";
+        if (!std::getline(std::cin, command)) {
+            std::cout << "\nEOF detected. Exiting..." << std::endl;
+            break;
+        }
+
         if (command == "EXIT") {
+            std::cout << "Goodbye!" << std::endl;
             break;
         } else if (command == "ADD") {
-            Contact contact = create_contact();
-            phonebook.add(contact);
+            phonebook.add();
         } else if (command == "SEARCH") {
             phonebook.search();
         } else {
-            std::cout << "Invalid command. Please try again." << std::endl;
+            std::cout << "Invalid command. Available commands: ADD, SEARCH, EXIT" << std::endl;
         }
     }
     return 0;
