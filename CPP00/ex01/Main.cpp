@@ -6,7 +6,7 @@
 /*   By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 16:55:14 by seayeo            #+#    #+#             */
-/*   Updated: 2025/02/20 16:42:51 by seayeo           ###   ########.fr       */
+/*   Updated: 2025/02/21 18:15:06 by seayeo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 int	main(void)
 {
-	Phonebook	phonebook;
+	PhoneBook	phonebook;
 
 	std::string command;
 	std::cout << "Welcome to PhoneBook!" << std::endl;

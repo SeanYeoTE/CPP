@@ -6,13 +6,13 @@
 /*   By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 17:20:35 by seayeo            #+#    #+#             */
-/*   Updated: 2025/02/20 17:19:15 by seayeo           ###   ########.fr       */
+/*   Updated: 2025/02/21 18:21:12 by seayeo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PhoneBook.hpp"
 
-Phonebook::Phonebook() {
+PhoneBook::PhoneBook() {
     contact_count = 0;
     oldest_contact = 0;
 }
@@ -29,7 +29,7 @@ static std::string get_input(const std::string &prompt) {
     return input;
 }
 
-void Phonebook::add() {
+void PhoneBook::add() {
     int index;
     if (contact_count < 8)
         index = contact_count;
@@ -49,13 +49,13 @@ void Phonebook::add() {
     std::cout << "Contact added successfully!" << std::endl;
 }
 
-void Phonebook::display_search_header() const {
+void PhoneBook::display_search_header() const {
     std::cout << "|-------------------------------------------|" << std::endl;
     std::cout << "|Index     |First Name|Last Name |Nickname  |" << std::endl;
     std::cout << "|-------------------------------------------|" << std::endl;
 }
 
-void Phonebook::display_contact_details(int index) const {
+void PhoneBook::display_contact_details(int index) const {
     std::cout << "\nContact Details:" << std::endl;
     std::cout << "First Name: " << contacts[index].get_firstname() << std::endl;
     std::cout << "Last Name: " << contacts[index].get_lastname() << std::endl;
@@ -63,7 +63,7 @@ void Phonebook::display_contact_details(int index) const {
     std::cout << "Phone Number: " << contacts[index].get_phonenumber() << std::endl;
     }
 
-void Phonebook::search() const {
+void PhoneBook::search() const {
     if (contact_count == 0) {
         std::cout << "Phonebook is empty!" << std::endl;
         return;
@@ -83,15 +83,17 @@ void Phonebook::search() const {
         if (input == "q")
             return;
             
-        try {
-            index = std::stoi(input);
+        std::istringstream iss(input);
+        if (!(iss >> index)) {
+            std::cout << "Invalid input. Please try again." << std::endl;
+            continue;
+        }
+        else {
             if (index >= 0 && index < contact_count) {
                 display_contact_details(index);
                 break;
             }
         }
-        catch (...) {
-            }
         std::cout << "Invalid index. Please try again." << std::endl;
     }
 }
