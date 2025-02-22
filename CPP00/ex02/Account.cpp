@@ -6,7 +6,7 @@
 /*   By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 16:08:01 by seayeo            #+#    #+#             */
-/*   Updated: 2025/01/24 16:56:43 by seayeo           ###   ########.fr       */
+/*   Updated: 2025/02/22 17:22:40 by seayeo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,5 +90,14 @@ void Account::displayStatus( void ) const {
 void Account::_displayTimestamp( void ) {
     time_t now = time(0);
     tm *ltm = localtime(&now);
-    std::cout << "[" << 1900 + ltm->tm_year << std::setw(2) << std::setfill('0') << 1 + ltm->tm_mon << std::setw(2) << std::setfill('0') << ltm->tm_mday << "_" << std::setw(2) << std::setfill('0') << ltm->tm_hour << std::setw(2) << std::setfill('0') << ltm->tm_min << std::setw(2) << std::setfill('0') << ltm->tm_sec << "] ";
+    
+    std::cout << "[";
+    std::cout << 1900 + ltm->tm_year;
+    std::cout << std::setw(2) << std::setfill('0') << 1 + ltm->tm_mon;
+    std::cout << std::setw(2) << std::setfill('0') << ltm->tm_mday;
+    std::cout << "_";
+    std::cout << std::setw(2) << std::setfill('0') << ltm->tm_hour;
+    std::cout << std::setw(2) << std::setfill('0') << ltm->tm_min;
+    std::cout << std::setw(2) << std::setfill('0') << ltm->tm_sec;
+    std::cout << "] ";
 }
