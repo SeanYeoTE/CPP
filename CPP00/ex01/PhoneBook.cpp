@@ -6,7 +6,7 @@
 /*   By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 17:20:35 by seayeo            #+#    #+#             */
-/*   Updated: 2025/02/21 18:21:12 by seayeo           ###   ########.fr       */
+/*   Updated: 2025/02/22 18:54:31 by seayeo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void PhoneBook::add() {
 
 void PhoneBook::display_search_header() const {
     std::cout << "|-------------------------------------------|" << std::endl;
-    std::cout << "|Index     |First Name|Last Name |Nickname  |" << std::endl;
+    std::cout << "|     Index|First Name| Last Name|  Nickname|" << std::endl;
     std::cout << "|-------------------------------------------|" << std::endl;
 }
 

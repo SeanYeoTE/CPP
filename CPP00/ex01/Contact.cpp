@@ -6,7 +6,7 @@
 /*   By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 15:53:10 by seayeo            #+#    #+#             */
-/*   Updated: 2025/02/20 17:10:19 by seayeo           ###   ########.fr       */
+/*   Updated: 2025/02/22 18:53:55 by seayeo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ std::string Contact::get_phonenumber() const
 
 void Contact::print_contact() const
 {
-	std::cout << "|" << std::setw(10) << std::left << truncate(_first_name) << "|";
-	std::cout << std::setw(10) << std::left << truncate(_last_name) << "|";
-	std::cout << std::setw(10) << std::left << truncate(_nickname) << "|" << std::endl;
+	std::cout << "|" << std::setw(10) << std::right << truncate(_first_name) << "|";
+	std::cout << std::setw(10) << std::right << truncate(_last_name) << "|";
+	std::cout << std::setw(10) << std::right << truncate(_nickname) << "|" << std::endl;
 }
