@@ -6,7 +6,7 @@
 /*   By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 17:20:35 by seayeo            #+#    #+#             */
-/*   Updated: 2025/02/22 19:08:50 by seayeo           ###   ########.fr       */
+/*   Updated: 2025/02/25 12:34:52 by seayeo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,11 @@ static std::string get_input(const std::string &prompt) {
     std::string input;
     while (true) {
         std::cout << prompt;
-        std::getline(std::cin, input);
+        if (!std::getline(std::cin, input))
+        {
+            std::cout << "Bad input." << std::endl;
+            break;
+        }
         if (!input.empty() && !is_only_whitespace(input))
             break;
         std::cout << "Field cannot be empty. Please try again." << std::endl;
