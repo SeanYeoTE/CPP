@@ -6,7 +6,7 @@
 #    By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/27 17:59:01 by seayeo            #+#    #+#              #
-#    Updated: 2025/02/27 18:03:07 by seayeo           ###   ########.fr        #
+#    Updated: 2025/03/10 18:45:36 by seayeo           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,15 +18,19 @@ SRCS = main.cpp Fixed.cpp
 OBJS = $(SRCS:.cpp=.o)
 RM = rm -f
 
+DEPS = $(OBJS:.o=.d)
+
 all: $(NAME)
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 	
 %.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -MMD -c $< -o $@
+
+-include $(DEPS)
 
 clean:
-	$(RM) $(OBJS)
+	$(RM) $(OBJS) $(DEPS)
 	
 fclean: clean
 	$(RM) $(NAME)
