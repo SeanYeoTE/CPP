@@ -80,7 +80,10 @@ void ClapTrap::attack(const std::string &target)
 
 void ClapTrap::takeDamage(unsigned int amount)
 {
-	hitPoints -= amount;
+	if (amount >= getHitPoints()) // Check if damage exceeds current hit points
+		hitPoints = 0;			  // Set hit points to zero if damage exceeds
+	else
+		hitPoints -= amount; // Otherwise, reduce hit points
 	std::cout << "ClapTrap " << name << " takes " << amount << " points of damage!" << std::endl;
 }
 
@@ -102,6 +105,21 @@ void ClapTrap::beRepaired(unsigned int amount)
 	}
 }
 
+void ClapTrap::setHitPoints(unsigned int points)
+{
+	hitPoints = points;
+}
+
+void ClapTrap::setEnergyPoints(unsigned int points)
+{
+	energyPoints = points;
+}
+
+void ClapTrap::setAttackDamage(unsigned int damage)
+{
+	attackDamage = damage;
+}
+
 /*
 ** --------------------------------- ACCESSOR ---------------------------------
 */
@@ -111,17 +129,17 @@ std::string ClapTrap::getName() const
 	return name;
 }
 
-int ClapTrap::getHitPoints() const
+unsigned int ClapTrap::getHitPoints() const
 {
 	return hitPoints;
 }
 
-int ClapTrap::getEnergyPoints() const
+unsigned int ClapTrap::getEnergyPoints() const
 {
 	return energyPoints;
 }
 
-int ClapTrap::getAttackDamage() const
+unsigned int ClapTrap::getAttackDamage() const
 {
 	return attackDamage;
 }

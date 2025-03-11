@@ -12,29 +12,13 @@ void waitForUserInput()
 int main()
 {
     system("clear");
+    // Test ClapTrap
     std::cout << std::endl
-              << YELLOW << "=== Testing ClapTrap base case ===" << RESET << std::endl;
+              << YELLOW << "=== Testing ClapTrap ===" << RESET << std::endl;
     ClapTrap clapTrap("ClapTrap1");
     clapTrap.attack("target");
     clapTrap.takeDamage(5);
     clapTrap.beRepaired(2);
-
-    waitForUserInput();
-    system("clear");
-    // more tests
-    // Test for 0 energy points behavior
-    std::cout << std::endl
-              << YELLOW << "=== Testing ClapTrap 0 energy points behavior ===" << RESET << std::endl;
-    ClapTrap energyTest("EnergyTest");
-    // Perform 10 attacks to drain all energy points
-    for (int i = 0; i < 10; i++)
-    {
-        energyTest.attack("dummy");
-    }
-    // These should fail due to no energy points
-    std::cout << RED << "Attempting actions with 0 energy points:" << RESET << std::endl;
-    energyTest.attack("dummy");
-    energyTest.beRepaired(5);
 
     waitForUserInput();
     system("clear");
@@ -43,52 +27,49 @@ int main()
               << YELLOW << "=== Testing ClapTrap max health points limit ===" << RESET << std::endl;
     ClapTrap healthTest("HealthTest");
     std::cout << "Initial state, should have 10 hit points" << std::endl;
+
     // Try to repair for more than max health
     std::cout << GREEN << "Attempting to repair 5 points (should work fully):" << RESET << std::endl;
     healthTest.beRepaired(5);
 
     // Take some damage
-    std::cout << GREEN << "Taking 2 points of damage:" << RESET << std::endl;
-    healthTest.takeDamage(2);
-
-    // Try to overheal
-    std::cout << GREEN << "Attempting to repair 5 points (should be limited to prevent overheal):" << RESET << std::endl;
-    healthTest.beRepaired(5);
+    std::cout << GREEN << "Taking 15 points of damage (should not go below 0):" << RESET << std::endl;
+    healthTest.takeDamage(15);
+    std::cout << "HealthTest current hit points: " << healthTest.getHitPoints() << std::endl;
 
     waitForUserInput();
     system("clear");
     // Test canonical form functionality
     std::cout << std::endl
               << YELLOW << "=== Testing ClapTrap Canonical Form Functionality ===" << RESET << std::endl;
-    // Test copy constructor
     std::cout << CYAN << "Testing ClapTrap copy constructor:" << RESET << std::endl;
-    ClapTrap original("Original");
-    original.attack("dummy"); // Reduce energy points to test deep copy
+    ClapTrap clapOriginal("ClapOriginal");
+    clapOriginal.attack("dummy");
     std::cout << "Original ClapTrap state:" << std::endl
-              << original << std::endl;
+              << clapOriginal << std::endl;
 
-    ClapTrap copy(original); // Copy constructor
+    ClapTrap clapCopy(clapOriginal);
     std::cout << "Copied ClapTrap state:" << std::endl
-              << copy << std::endl;
+              << clapCopy << std::endl;
 
-    // Test assignment operator
     std::cout << std::endl
               << CYAN << "Testing ClapTrap assignment operator:" << RESET << std::endl;
-    ClapTrap assigned("ToBeAssigned");
+    ClapTrap clapAssigned("ToBeAssigned");
     std::cout << "Before assignment:" << std::endl
-              << assigned << std::endl;
+              << clapAssigned << std::endl;
 
-    assigned = original; // Assignment operator
+    clapAssigned = clapOriginal;
     std::cout << "After assignment:" << std::endl
-              << assigned << std::endl;
+              << clapAssigned << std::endl;
 
-    // Test self-assignment
     std::cout << std::endl
               << CYAN << "Testing ClapTrap self-assignment:" << RESET << std::endl;
-    assigned = assigned; // Self-assignment should be safe
+    clapAssigned = clapAssigned;
     std::cout << "After self-assignment:" << std::endl
-              << assigned << std::endl;
+              << clapAssigned << std::endl;
 
+    waitForUserInput();
+    system("clear");
     // Test ScavTrap
     std::cout << std::endl
               << YELLOW << "=== Testing ScavTrap ===" << RESET << std::endl;
@@ -104,7 +85,7 @@ int main()
     std::cout << std::endl
               << YELLOW << "=== Testing ScavTrap 0 energy points behavior ===" << RESET << std::endl;
     ScavTrap scavEnergyTest("ScavEnergyTest");
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 50; i++)
     {
         scavEnergyTest.attack("dummy");
     }
@@ -118,13 +99,18 @@ int main()
     std::cout << std::endl
               << YELLOW << "=== Testing ScavTrap max health points limit ===" << RESET << std::endl;
     ScavTrap scavHealthTest("ScavHealthTest");
-    std::cout << "Initial state, should have 10 hit points" << std::endl;
-    std::cout << GREEN << "Attempting to repair 5 points (should work fully):" << RESET << std::endl;
-    scavHealthTest.beRepaired(5);
-    std::cout << GREEN << "Taking 2 points of damage:" << RESET << std::endl;
-    scavHealthTest.takeDamage(2);
-    std::cout << GREEN << "Attempting to repair 5 points (should be limited to prevent overheal):" << RESET << std::endl;
-    scavHealthTest.beRepaired(5);
+    std::cout << "Initial state, should have 100 hit points" << std::endl;
+
+    // Try to repair for more than max health
+    std::cout << GREEN << "Attempting to repair 50 points (should work fully):" << RESET << std::endl;
+    scavHealthTest.beRepaired(50);
+
+    // Take some damage
+    std::cout << GREEN << "Taking 150 points of damage (should not go below 0):" << RESET << std::endl;
+    scavHealthTest.takeDamage(150);
+
+    // Print current hit points instead of causing an error
+    std::cout << "ScavHealthTest current hit points: " << scavHealthTest.getHitPoints() << std::endl;
 
     waitForUserInput();
     system("clear");
@@ -156,4 +142,6 @@ int main()
     scavAssigned = scavAssigned;
     std::cout << "After self-assignment:" << std::endl
               << scavAssigned << std::endl;
+
+    return 0;
 }

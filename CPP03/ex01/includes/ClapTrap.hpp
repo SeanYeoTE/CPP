@@ -19,28 +19,33 @@ class ClapTrap
 {
 
 public:
+	ClapTrap(void);
 	ClapTrap(std::string name);
 	ClapTrap(ClapTrap const &src);
 	~ClapTrap();
 
 	ClapTrap &operator=(ClapTrap const &rhs);
 
-	void attack(const std::string &target);
-	void takeDamage(unsigned int amount);
-	void beRepaired(unsigned int amount);
+	virtual void attack(const std::string &target);
+	virtual void takeDamage(unsigned int amount);
+	virtual void beRepaired(unsigned int amount);
 
 	// Getters
 	std::string getName() const;
-	int getHitPoints() const;
-	int getEnergyPoints() const;
-	int getAttackDamage() const;
+	unsigned int getHitPoints() const;
+	unsigned int getEnergyPoints() const;
+	unsigned int getAttackDamage() const;
+	void printEnergyPoints();
+	// Setters
+	void setHitPoints(unsigned int points);
+	void setEnergyPoints(unsigned int points);
+	void setAttackDamage(unsigned int damage);
 
 private:
 	std::string name;
-	int hitPoints;
-	int energyPoints;
-	int attackDamage;
-	void printEnergyPoints();
+	unsigned int hitPoints;
+	unsigned int energyPoints;
+	unsigned int attackDamage;
 };
 
 std::ostream &operator<<(std::ostream &o, ClapTrap const &i);

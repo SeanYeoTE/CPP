@@ -80,7 +80,10 @@ void ClapTrap::attack(const std::string &target)
 
 void ClapTrap::takeDamage(unsigned int amount)
 {
-	hitPoints -= amount;
+	if (amount >= hitPoints) // Check if damage exceeds current hit points
+		hitPoints = 0;		 // Set hit points to zero if damage exceeds
+	else
+		hitPoints -= amount; // Otherwise, reduce hit points
 	std::cout << "ClapTrap " << name << " takes " << amount << " points of damage!" << std::endl;
 }
 
@@ -100,6 +103,21 @@ void ClapTrap::beRepaired(unsigned int amount)
 		std::cout << "ClapTrap " << name << " is repaired " << amount << " points!" << std::endl;
 		printEnergyPoints();
 	}
+}
+
+void ClapTrap::setHitPoints(int points)
+{
+	hitPoints = points;
+}
+
+void ClapTrap::setEnergyPoints(int points)
+{
+	energyPoints = points;
+}
+
+void ClapTrap::setAttackDamage(int damage)
+{
+	attackDamage = damage;
 }
 
 /*

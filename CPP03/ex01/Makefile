@@ -6,35 +6,54 @@
 #    By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 15:24:04 by seayeo            #+#    #+#              #
-#    Updated: 2025/03/10 18:54:23 by seayeo           ###   ########.fr        #
+#    Updated: 2025/03/11 18:42:33 by seayeo           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = ex00
+# Compiler and flags
+CC      = c++
+CFLAGS  = -Wall -Wextra -Werror -std=c++98 -I includes
 
-CC = c++
-CFLAGS = -Wall -Wextra -Werror -std=c++98
-SRCS = main.cpp ClapTrap.cpp
-OBJS = $(SRCS:.cpp=.o)
-RM = rm -f
+# Directories
+SRC_DIR  = srcs
+OBJ_DIR  = objs
+INC_DIR  = includes
 
-DEPS = $(OBJS:.o=.d)
+# Source files
+SRC_FILES = main.cpp ClapTrap.cpp ScavTrap.cpp
 
+# List of source files with directory prefix
+SRCS     = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
+
+# Corresponding object files with directory prefix
+OBJS     = $(addprefix $(OBJ_DIR)/, $(SRC_FILES:.cpp=.o))
+
+RM       = rm -f
+
+# Dependency files
+DEPS     = $(OBJS:.o=.d)
+
+# Program name (of executable)
+NAME     = ex01
+
+# Targets
+.PHONY: all
 all: $(NAME)
+
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^
-	
-%.o: %.cpp
-	$(CC) $(CFLAGS) -MMD -c $< -o $@
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) -o $@ $^
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) -MMD -c $< -o $@
 
 -include $(DEPS)
 
 clean:
-	$(RM) $(OBJS) $(DEPS)
-	
+	@$(RM) $(OBJS) $(DEPS)
+
 fclean: clean
-	$(RM) $(NAME)
+	@$(RM) $(NAME)
 
 re: fclean all
-
-.PHONY: all clean fclean re
