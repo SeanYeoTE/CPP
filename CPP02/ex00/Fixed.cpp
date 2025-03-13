@@ -4,7 +4,7 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
-Fixed::Fixed()
+Fixed::Fixed() : _value(0)
 {
 	std::cout << "Default constructor called" << std::endl;
 }
@@ -37,13 +37,6 @@ Fixed &				Fixed::operator=( Fixed const & rhs )
 	}
 	return *this;
 }
-
-std::ostream &			operator<<( std::ostream & o, Fixed const & i )
-{
-	std::cout << i.getRawBits();
-	return o;
-}
-
 
 /*
 ** --------------------------------- METHODS ----------------------------------
