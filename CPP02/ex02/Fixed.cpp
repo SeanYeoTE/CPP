@@ -4,7 +4,7 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
-Fixed::Fixed()
+Fixed::Fixed() : _value(0)
 {
 	// std::cout << "Default constructor called" << std::endl;
 }
@@ -41,7 +41,7 @@ Fixed::~Fixed()
 ** --------------------------------- OVERLOAD ---------------------------------
 */
 
-Fixed &				Fixed::operator=( Fixed const & rhs )
+Fixed &	Fixed::operator=( Fixed const & rhs )
 {
 	if ( this != &rhs )
 	{
@@ -81,24 +81,24 @@ bool Fixed::operator!=( Fixed const & rhs )
 	return (this->toFloat() != rhs.toFloat());
 }
 
-Fixed &	Fixed::operator+( Fixed const & rhs )
+Fixed Fixed::operator+( Fixed const & rhs ) const
 {
-	return (this->toFloat() + rhs.toFloat());
+	return Fixed(this->toFloat() + rhs.toFloat());
 }
 
-Fixed &	Fixed::operator-( Fixed const & rhs )
+Fixed Fixed::operator-( Fixed const & rhs ) const
 {
-	return (this->toFloat() - rhs.toFloat());
+	return Fixed(this->toFloat() - rhs.toFloat());
 }
 
-Fixed &	Fixed::operator*( Fixed const & rhs )
+Fixed Fixed::operator*( Fixed const & rhs ) const
 {
-	return (this->toFloat() * rhs.toFloat());
+	return Fixed(this->toFloat() * rhs.toFloat());
 }
 
-Fixed &	Fixed::operator/( Fixed const & rhs )
+Fixed Fixed::operator/( Fixed const & rhs ) const
 {
-	return (this->toFloat() / rhs.toFloat());
+	return Fixed(this->toFloat() / rhs.toFloat());
 }
 
 //postfix
@@ -137,7 +137,33 @@ std::ostream &			operator<<( std::ostream & o, Fixed const & i )
 	return o;
 }
 
+Fixed *Fixed::min( Fixed & a, Fixed & b )
+{
+	if (a.toFloat() < b.toFloat())
+		return &a;
+	return &b;
+}
 
+const Fixed *Fixed::min( Fixed const & a, Fixed const & b )
+{
+	if (a.toFloat() < b.toFloat())
+		return &a;
+	return &b;
+}
+
+Fixed *Fixed::max(Fixed & a, Fixed & b)
+{
+	if (a.toFloat() > b.toFloat())
+		return a;
+	return b;
+}
+
+const Fixed *Fixed::max(Fixed const & a, Fixed const & b)
+{
+	if (a.toFloat() > b.toFloat())
+		return &a;
+	return &b;
+}
 /*
 ** --------------------------------- METHODS ----------------------------------
 */
