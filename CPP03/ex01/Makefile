@@ -6,7 +6,7 @@
 #    By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 15:24:04 by seayeo            #+#    #+#              #
-#    Updated: 2025/03/11 18:42:33 by seayeo           ###   ########.fr        #
+#    Updated: 2025/03/15 17:26:03 by seayeo           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,23 +37,24 @@ DEPS     = $(OBJS:.o=.d)
 NAME     = ex01
 
 # Targets
-.PHONY: all
-all: $(NAME)
+.PHONY: all clean fclean re
+all: $(OBJ_DIR) $(NAME)
+
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
 
 $(NAME): $(OBJS)
-	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) -MMD -c $< -o $@
+	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
 -include $(DEPS)
 
 clean:
-	@$(RM) $(OBJS) $(DEPS)
+	$(RM) $(OBJS) $(DEPS)
 
 fclean: clean
-	@$(RM) $(NAME)
+	$(RM) $(NAME)
 
 re: fclean all

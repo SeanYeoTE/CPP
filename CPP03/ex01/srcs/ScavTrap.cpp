@@ -62,33 +62,6 @@ void ScavTrap::attack(const std::string &target)
 	}
 }
 
-void ScavTrap::takeDamage(unsigned int amount)
-{
-	if (amount >= this->getHitPoints())
-		this->setHitPoints(0);
-	else
-		this->setHitPoints(this->getHitPoints() - amount);
-	std::cout << "ScavTrap " << this->getName() << " takes " << amount << " points of damage!" << std::endl;
-}
-
-void ScavTrap::beRepaired(unsigned int amount)
-{
-	if (this->getEnergyPoints() <= 0 || this->getHitPoints() <= 0)
-	{
-		std::cout << "ScavTrap " << this->getName() << " has no hit points or energy points to repair!" << std::endl;
-		return;
-	}
-	else
-	{
-		if (this->getHitPoints() + amount > 100)
-			amount = 100 - this->getHitPoints();
-		this->setHitPoints(this->getHitPoints() + amount);
-		this->setEnergyPoints(this->getEnergyPoints() - 1);
-		std::cout << "ScavTrap " << this->getName() << " is repaired " << amount << " points!" << std::endl;
-		this->printEnergyPoints();
-	}
-}
-
 void ScavTrap::guardGate()
 {
 	std::cout << "ScavTrap " << getName() << " is now in Gate Keeper mode!" << std::endl;
