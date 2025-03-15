@@ -32,20 +32,20 @@ public:
 
 	// Getters
 	std::string getName() const;
-	int getHitPoints() const;
-	int getEnergyPoints() const;
-	int getAttackDamage() const;
+	unsigned int getHitPoints() const;
+	unsigned int getEnergyPoints() const;
+	unsigned int getAttackDamage() const;
 
 	// Setters
-	void setHitPoints(int points);
-	void setEnergyPoints(int points);
-	void setAttackDamage(int damage);
+	void setHitPoints(unsigned int points);
+	void setEnergyPoints(unsigned int points);
+	void setAttackDamage(unsigned int damage);
 
 private:
 	std::string name;
-	int hitPoints;
-	int energyPoints;
-	int attackDamage;
+	unsigned int hitPoints;
+	unsigned int energyPoints;
+	unsigned int attackDamage;
 	void printEnergyPoints();
 };
 

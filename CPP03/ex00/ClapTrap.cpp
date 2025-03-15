@@ -105,17 +105,17 @@ void ClapTrap::beRepaired(unsigned int amount)
 	}
 }
 
-void ClapTrap::setHitPoints(int points)
+void ClapTrap::setHitPoints(unsigned int points)
 {
 	hitPoints = points;
 }
 
-void ClapTrap::setEnergyPoints(int points)
+void ClapTrap::setEnergyPoints(unsigned int points)
 {
 	energyPoints = points;
 }
 
-void ClapTrap::setAttackDamage(int damage)
+void ClapTrap::setAttackDamage(unsigned int damage)
 {
 	attackDamage = damage;
 }
@@ -129,17 +129,17 @@ std::string ClapTrap::getName() const
 	return name;
 }
 
-int ClapTrap::getHitPoints() const
+unsigned int ClapTrap::getHitPoints() const
 {
 	return hitPoints;
 }
 
-int ClapTrap::getEnergyPoints() const
+unsigned int ClapTrap::getEnergyPoints() const
 {
 	return energyPoints;
 }
 
-int ClapTrap::getAttackDamage() const
+unsigned int ClapTrap::getAttackDamage() const
 {
 	return attackDamage;
 }
