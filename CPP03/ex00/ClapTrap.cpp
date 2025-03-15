@@ -4,17 +4,31 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
+ClapTrap::ClapTrap(void)
+{
+	std::cout << "ClapTrap default constructor called" << std::endl;
+	this->name = "Default";
+	maxHitPoints = 10;
+	hitPoints = maxHitPoints;
+	energyPoints = 10;
+	attackDamage = 0;
+}
+
 ClapTrap::ClapTrap(std::string name)
 {
+	std::cout << "ClapTrap named constructor called" << std::endl;
 	this->name = name;
-	hitPoints = 10;
+	maxHitPoints = 10;
+	hitPoints = maxHitPoints;
 	energyPoints = 10;
 	attackDamage = 0;
 }
 
 ClapTrap::ClapTrap(const ClapTrap &src)
 {
+	std::cout << "ClapTrap copy constructor called" << std::endl;
 	name = src.name;
+	maxHitPoints = src.maxHitPoints;
 	hitPoints = src.hitPoints;
 	energyPoints = src.energyPoints;
 	attackDamage = src.attackDamage;
@@ -26,6 +40,7 @@ ClapTrap::ClapTrap(const ClapTrap &src)
 
 ClapTrap::~ClapTrap()
 {
+	std::cout << "ClapTrap " << name << " destroyed." << std::endl;
 }
 
 /*
@@ -47,6 +62,7 @@ ClapTrap &ClapTrap::operator=(ClapTrap const &rhs)
 	if (this != &rhs) // Check for self-assignment
 	{
 		this->name = rhs.name;
+		this->maxHitPoints = rhs.maxHitPoints;
 		this->hitPoints = rhs.hitPoints;
 		this->energyPoints = rhs.energyPoints;
 		this->attackDamage = rhs.attackDamage;
@@ -96,8 +112,8 @@ void ClapTrap::beRepaired(unsigned int amount)
 	}
 	else
 	{
-		if (hitPoints + amount > 10)
-			amount = 10 - hitPoints;
+		if (hitPoints + amount > maxHitPoints)
+			amount = maxHitPoints - hitPoints;
 		hitPoints += amount;
 		energyPoints--;
 		std::cout << "ClapTrap " << name << " is repaired " << amount << " points!" << std::endl;
@@ -108,6 +124,7 @@ void ClapTrap::beRepaired(unsigned int amount)
 void ClapTrap::setHitPoints(unsigned int points)
 {
 	hitPoints = points;
+	maxHitPoints = points;
 }
 
 void ClapTrap::setEnergyPoints(unsigned int points)

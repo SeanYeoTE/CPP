@@ -46,6 +46,7 @@ private:
 	unsigned int hitPoints;
 	unsigned int energyPoints;
 	unsigned int attackDamage;
+	unsigned int maxHitPoints;
 	void printEnergyPoints();
 };
 

@@ -34,7 +34,6 @@ public:
 	unsigned int getHitPoints() const;
 	unsigned int getEnergyPoints() const;
 	unsigned int getAttackDamage() const;
-	unsigned int getMaxHitPoints() const;
 	void printEnergyPoints();
 	// Setters
 	void setHitPoints(unsigned int points);

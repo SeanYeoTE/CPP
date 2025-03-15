@@ -18,6 +18,7 @@ ClapTrap::ClapTrap(const ClapTrap &src)
 {
 	std::cout << "ClapTrap copy constructor called" << std::endl;
 	name = src.name;
+	maxHitPoints = src.maxHitPoints;
 	hitPoints = src.hitPoints;
 	energyPoints = src.energyPoints;
 	attackDamage = src.attackDamage;
@@ -51,6 +52,7 @@ ClapTrap &ClapTrap::operator=(ClapTrap const &rhs)
 	if (this != &rhs) // Check for self-assignment
 	{
 		this->name = rhs.name;
+		this->maxHitPoints = rhs.maxHitPoints;
 		this->hitPoints = rhs.hitPoints;
 		this->energyPoints = rhs.energyPoints;
 		this->attackDamage = rhs.attackDamage;
@@ -112,6 +114,7 @@ void ClapTrap::beRepaired(unsigned int amount)
 void ClapTrap::setHitPoints(unsigned int points)
 {
 	hitPoints = points;
+	maxHitPoints = points;
 }
 
 void ClapTrap::setEnergyPoints(unsigned int points)
