@@ -11,13 +11,13 @@ ScavTrap::ScavTrap(std::string name) : ClapTrap(name)
 	setAttackDamage(20); // Use setter method
 }
 
-// ScavTrap::ScavTrap(const ScavTrap &src) : ClapTrap(src)
-// {
-// 	// Copy the specific attributes if any
-// 	setHitPoints(src.getHitPoints());
-// 	setEnergyPoints(src.getEnergyPoints());
-// 	setAttackDamage(src.getAttackDamage());
-// }
+ScavTrap::ScavTrap(const ScavTrap &src) : ClapTrap(src)
+{
+	// Copy the specific attributes if any
+	setHitPoints(src.getHitPoints());
+	setEnergyPoints(src.getEnergyPoints());
+	setAttackDamage(src.getAttackDamage());
+}
 
 /*
 ** -------------------------------- DESTRUCTOR --------------------------------
