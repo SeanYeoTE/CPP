@@ -1,15 +1,25 @@
-#include "ScavTrap.hpp"
+#include "../includes/ScavTrap.hpp"
 
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
+ScavTrap::ScavTrap() : ClapTrap()
+{
+	std::cout << "ScavTrap default constructor called" << std::endl;
+	setMaxHitPoints(100);  // Set max HP first
+	setHitPoints(100);     // Then set current HP
+	setEnergyPoints(50);   // Use setter method
+	setAttackDamage(20);   // Use setter method
+}
+
 ScavTrap::ScavTrap(std::string name) : ClapTrap(name)
 {
 	std::cout << "ScavTrap constructor called" << std::endl;
-	setHitPoints(100);	 // Use setter method
-	setEnergyPoints(50); // Use setter method
-	setAttackDamage(20); // Use setter method
+	setMaxHitPoints(100);  // Set max HP first
+	setHitPoints(100);     // Then set current HP
+	setEnergyPoints(50);   // Use setter method
+	setAttackDamage(20);   // Use setter method
 }
 
 ScavTrap::ScavTrap(const ScavTrap &src) : ClapTrap(src)

@@ -1,24 +1,33 @@
-#include "ClapTrap.hpp"
+#include "../includes/ClapTrap.hpp"
 
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
+ClapTrap::ClapTrap()
+{
+	std::cout << "ClapTrap default constructor called" << std::endl;
+	this->name = "default";
+	setMaxHitPoints(10);
+	setHitPoints(10);
+	setEnergyPoints(10);
+	setAttackDamage(0);
+}
+
 ClapTrap::ClapTrap(std::string name)
 {
 	std::cout << "ClapTrap constructor called" << std::endl;
 	this->name = name;
-	maxHitPoints = 10;
-	hitPoints = maxHitPoints;
-	energyPoints = 10;
-	attackDamage = 0;
+	setMaxHitPoints(10);
+	setHitPoints(10);
+	setEnergyPoints(10);
+	setAttackDamage(0);
 }
 
 ClapTrap::ClapTrap(const ClapTrap &src)
 {
 	std::cout << "ClapTrap copy constructor called" << std::endl;
 	name = src.name;
-	maxHitPoints = src.maxHitPoints;
 	hitPoints = src.hitPoints;
 	energyPoints = src.energyPoints;
 	attackDamage = src.attackDamage;
@@ -52,7 +61,6 @@ ClapTrap &ClapTrap::operator=(ClapTrap const &rhs)
 	if (this != &rhs) // Check for self-assignment
 	{
 		this->name = rhs.name;
-		this->maxHitPoints = rhs.maxHitPoints;
 		this->hitPoints = rhs.hitPoints;
 		this->energyPoints = rhs.energyPoints;
 		this->attackDamage = rhs.attackDamage;
@@ -102,8 +110,8 @@ void ClapTrap::beRepaired(unsigned int amount)
 	}
 	else
 	{
-		if (hitPoints + amount > maxHitPoints)
-			amount = maxHitPoints - hitPoints;
+		if (hitPoints + amount > maxHitPoints) // Check if repairing exceeds max hit points
+			amount = maxHitPoints - hitPoints; // Adjust amount to not exceed max hit points
 		hitPoints += amount;
 		energyPoints--;
 		std::cout << "ClapTrap " << name << " is repaired " << amount << " points!" << std::endl;
@@ -114,7 +122,6 @@ void ClapTrap::beRepaired(unsigned int amount)
 void ClapTrap::setHitPoints(unsigned int points)
 {
 	hitPoints = points;
-	maxHitPoints = points;
 }
 
 void ClapTrap::setEnergyPoints(unsigned int points)
@@ -125,6 +132,11 @@ void ClapTrap::setEnergyPoints(unsigned int points)
 void ClapTrap::setAttackDamage(unsigned int damage)
 {
 	attackDamage = damage;
+}
+
+void ClapTrap::setMaxHitPoints(unsigned int points)
+{
+	maxHitPoints = points;
 }
 
 /*

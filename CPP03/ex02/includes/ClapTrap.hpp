@@ -19,6 +19,7 @@ class ClapTrap
 {
 
 public:
+	ClapTrap();
 	ClapTrap(std::string name);
 	ClapTrap(ClapTrap const &src);
 	~ClapTrap();
@@ -39,8 +40,9 @@ public:
 	void setHitPoints(unsigned int points);
 	void setEnergyPoints(unsigned int points);
 	void setAttackDamage(unsigned int damage);
+	void setMaxHitPoints(unsigned int points);
 
-private:
+protected:
 	std::string name;
 	unsigned int hitPoints;
 	unsigned int energyPoints;

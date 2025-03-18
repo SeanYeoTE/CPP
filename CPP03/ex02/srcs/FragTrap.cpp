@@ -1,13 +1,21 @@
-#include "FragTrap.hpp"
+#include "../includes/FragTrap.hpp"
 
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
+FragTrap::FragTrap() : ClapTrap()
+{
+	std::cout << "FragTrap default constructor called" << std::endl;
+	setHitPoints(100);    // Use setter method
+	setEnergyPoints(100); // Use setter method
+	setAttackDamage(30);  // Use setter method
+}
+
 FragTrap::FragTrap(std::string name) : ClapTrap(name)
 {
 	std::cout << "FragTrap constructor called" << std::endl;
-	setHitPoints(100);	  // Use setter method
+	setHitPoints(100);    // Use setter method
 	setEnergyPoints(100); // Use setter method
 	setAttackDamage(30);  // Use setter method
 }
@@ -39,7 +47,7 @@ std::ostream &operator<<(std::ostream &o, FragTrap const &i)
 	o << "Hit Points: " << i.getHitPoints() << std::endl;
 	o << "Energy Points: " << i.getEnergyPoints() << std::endl;
 	o << "Attack Damage: " << i.getAttackDamage();
-	return o;
+	return (o);
 }
 
 FragTrap &FragTrap::operator=(const FragTrap &other)
@@ -49,7 +57,7 @@ FragTrap &FragTrap::operator=(const FragTrap &other)
 	{
 		ClapTrap::operator=(other); // Call base class assignment operator
 	}
-	return *this;
+	return (*this);
 }
 /*
 ** --------------------------------- METHODS ----------------------------------
@@ -65,7 +73,7 @@ void FragTrap::attack(const std::string &target)
 	if (this->getEnergyPoints() <= 0 || this->getHitPoints() <= 0)
 	{
 		std::cout << "FragTrap " << this->getName() << " has no hit points or energy points to attack!" << std::endl;
-		return;
+		return ;
 	}
 	else
 	{
