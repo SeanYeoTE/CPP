@@ -1,5 +1,5 @@
-#include "ClapTrap.hpp"
-#include "ScavTrap.hpp"
+#include "../includes/ClapTrap.hpp"
+#include "../includes/ScavTrap.hpp"
 #include <limits>
 #include <cstdlib> // For system("clear")
 
