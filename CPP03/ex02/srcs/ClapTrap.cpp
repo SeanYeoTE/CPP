@@ -52,7 +52,7 @@ std::ostream &operator<<(std::ostream &o, ClapTrap const &i)
 	std::cout << "Hit Points: " << i.getHitPoints() << std::endl;
 	std::cout << "Energy Points: " << i.getEnergyPoints() << std::endl;
 	std::cout << "Attack Damage: " << i.getAttackDamage();
-	return o;
+	return (o);
 }
 
 ClapTrap &ClapTrap::operator=(ClapTrap const &rhs)
@@ -64,8 +64,9 @@ ClapTrap &ClapTrap::operator=(ClapTrap const &rhs)
 		this->hitPoints = rhs.hitPoints;
 		this->energyPoints = rhs.energyPoints;
 		this->attackDamage = rhs.attackDamage;
+		this->maxHitPoints = rhs.maxHitPoints;
 	}
-	return *this;
+	return (*this);
 }
 
 /*
@@ -82,7 +83,7 @@ void ClapTrap::attack(const std::string &target)
 	if (energyPoints <= 0 || hitPoints <= 0)
 	{
 		std::cout << "ClapTrap " << name << " has no hit points or energy points to attack!" << std::endl;
-		return;
+		return ;
 	}
 	else
 	{
@@ -95,7 +96,7 @@ void ClapTrap::attack(const std::string &target)
 void ClapTrap::takeDamage(unsigned int amount)
 {
 	if (amount >= getHitPoints()) // Check if damage exceeds current hit points
-		hitPoints = 0;			  // Set hit points to zero if damage exceeds
+		hitPoints = 0;            // Set hit points to zero if damage exceeds
 	else
 		hitPoints -= amount; // Otherwise, reduce hit points
 	std::cout << "ClapTrap " << name << " takes " << amount << " points of damage!" << std::endl;
@@ -106,12 +107,14 @@ void ClapTrap::beRepaired(unsigned int amount)
 	if (energyPoints <= 0 || hitPoints <= 0)
 	{
 		std::cout << "ClapTrap " << name << " has no hit points or energy points to repair!" << std::endl;
-		return;
+		return ;
 	}
 	else
 	{
-		if (hitPoints + amount > maxHitPoints) // Check if repairing exceeds max hit points
-			amount = maxHitPoints - hitPoints; // Adjust amount to not exceed max hit points
+		if (hitPoints + amount > maxHitPoints)
+			// Check if repairing exceeds max hit points
+			amount = maxHitPoints - hitPoints;
+				// Adjust amount to not exceed max hit points
 		hitPoints += amount;
 		energyPoints--;
 		std::cout << "ClapTrap " << name << " is repaired " << amount << " points!" << std::endl;
@@ -145,22 +148,27 @@ void ClapTrap::setMaxHitPoints(unsigned int points)
 
 std::string ClapTrap::getName() const
 {
-	return name;
+	return (name);
 }
 
 unsigned int ClapTrap::getHitPoints() const
 {
-	return hitPoints;
+	return (hitPoints);
 }
 
 unsigned int ClapTrap::getEnergyPoints() const
 {
-	return energyPoints;
+	return (energyPoints);
 }
 
 unsigned int ClapTrap::getAttackDamage() const
 {
-	return attackDamage;
+	return (attackDamage);
+}
+
+unsigned int ClapTrap::getMaxHitPoints() const
+{
+	return (maxHitPoints);
 }
 
 /* ************************************************************************** */

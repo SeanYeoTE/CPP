@@ -43,36 +43,27 @@ int main()
 
     waitForUserInput();
     system("clear");
-    // Test canonical form functionality
+    // Test for 0 hit points behavior
     {
         std::cout << std::endl
-                  << YELLOW << "=== Testing ClapTrap Canonical Form Functionality ===" << RESET << std::endl;
-        std::cout << CYAN << "Testing ClapTrap copy constructor:" << RESET << std::endl;
-        ClapTrap clapOriginal("ClapOriginal");
-        clapOriginal.attack("dummy");
-        std::cout << "Original ClapTrap state:" << std::endl
-                  << clapOriginal << std::endl;
-
-        ClapTrap clapCopy(clapOriginal);
-        std::cout << "Copied ClapTrap state:" << std::endl
-                  << clapCopy << std::endl;
-
-        std::cout << std::endl
-                  << CYAN << "Testing ClapTrap assignment operator:" << RESET << std::endl;
-        ClapTrap clapAssigned("ToBeAssigned");
-        std::cout << "Before assignment:" << std::endl
-                  << clapAssigned << std::endl;
-
-        clapAssigned = clapOriginal;
-        std::cout << "After assignment:" << std::endl
-                  << clapAssigned << std::endl;
-
-        std::cout << std::endl
-                  << CYAN << "Testing ClapTrap self-assignment:" << RESET << std::endl;
-        clapAssigned = clapAssigned;
-        std::cout << "After self-assignment:" << std::endl
-                  << clapAssigned << std::endl;
-    } // clapOriginal, clapCopy, and clapAssigned are destroyed here
+                  << YELLOW << "=== Testing ClapTrap 0 hit points behavior ===" << RESET << std::endl;
+        ClapTrap healthTest("HealthTest");
+        
+        // Take damage to reduce hit points to 0
+        std::cout << GREEN << "Taking 10 points of damage to reduce hit points to 0:" << RESET << std::endl;
+        healthTest.takeDamage(10);
+        std::cout << "HealthTest current hit points: " << healthTest.getHitPoints() << std::endl;
+        
+        // These should fail due to 0 hit points
+        std::cout << RED << "Attempting actions with 0 hit points:" << RESET << std::endl;
+        healthTest.attack("dummy");
+        healthTest.beRepaired(5);
+        
+        // Test taking additional damage when already at 0 hit points
+        std::cout << GREEN << "Taking additional damage when already at 0 hit points:" << RESET << std::endl;
+        healthTest.takeDamage(5);
+        std::cout << "HealthTest current hit points: " << healthTest.getHitPoints() << std::endl;
+    } // healthTest is destroyed here
 
     waitForUserInput();
     system("clear");
@@ -130,36 +121,28 @@ int main()
 
     waitForUserInput();
     system("clear");
-    // Test canonical form functionality
+    // Test for 0 hit points behavior
     {
         std::cout << std::endl
-                  << YELLOW << "=== Testing ScavTrap Canonical Form Functionality ===" << RESET << std::endl;
-        std::cout << CYAN << "Testing ScavTrap copy constructor:" << RESET << std::endl;
-        ScavTrap scavOriginal("ScavOriginal");
-        scavOriginal.attack("dummy");
-        std::cout << "Original ScavTrap state:" << std::endl
-                  << scavOriginal << std::endl;
-
-        ScavTrap scavCopy(scavOriginal);
-        std::cout << "Copied ScavTrap state:" << std::endl
-                  << scavCopy << std::endl;
-
-        std::cout << std::endl
-                  << CYAN << "Testing ScavTrap assignment operator:" << RESET << std::endl;
-        ScavTrap scavAssigned("ToBeAssigned");
-        std::cout << "Before assignment:" << std::endl
-                  << scavAssigned << std::endl;
-
-        scavAssigned = scavOriginal;
-        std::cout << "After assignment:" << std::endl
-                  << scavAssigned << std::endl;
-
-        std::cout << std::endl
-                  << CYAN << "Testing ScavTrap self-assignment:" << RESET << std::endl;
-        scavAssigned = scavAssigned;
-        std::cout << "After self-assignment:" << std::endl
-                  << scavAssigned << std::endl;
-    } // scavOriginal, scavCopy, and scavAssigned are destroyed here
+                  << YELLOW << "=== Testing ScavTrap 0 hit points behavior ===" << RESET << std::endl;
+        ScavTrap scavHealthTest("ScavHealthTest");
+        
+        // Take damage to reduce hit points to 0
+        std::cout << GREEN << "Taking 100 points of damage to reduce hit points to 0:" << RESET << std::endl;
+        scavHealthTest.takeDamage(100);
+        std::cout << "ScavHealthTest current hit points: " << scavHealthTest.getHitPoints() << std::endl;
+        
+        // These should fail due to 0 hit points
+        std::cout << RED << "Attempting actions with 0 hit points:" << RESET << std::endl;
+        scavHealthTest.attack("dummy");
+        scavHealthTest.beRepaired(5);
+        scavHealthTest.guardGate();
+        
+        // Test taking additional damage when already at 0 hit points
+        std::cout << GREEN << "Taking additional damage when already at 0 hit points:" << RESET << std::endl;
+        scavHealthTest.takeDamage(50);
+        std::cout << "ScavHealthTest current hit points: " << scavHealthTest.getHitPoints() << std::endl;
+    } // scavHealthTest is destroyed here
 
     return 0;
 }

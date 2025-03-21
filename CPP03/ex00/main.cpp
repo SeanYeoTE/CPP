@@ -66,37 +66,25 @@ int main()
 
     waitForUserInput();
     system("clear");
-    // Test canonical form functionality
+    // Test for 0 hit points behavior
     {
         std::cout << std::endl
-                << YELLOW << "=== Testing Canonical Form Functionality ===" << RESET << std::endl;
-        // Test copy constructor
-        std::cout << CYAN << "Testing copy constructor:" << RESET << std::endl;
-        ClapTrap original("Original");
-        original.attack("dummy"); // Reduce energy points to test deep copy
-        std::cout << "Original ClapTrap state:" << std::endl
-                << original << std::endl;
-
-        ClapTrap copy(original); // Copy constructor
-        std::cout << "Copied ClapTrap state:" << std::endl
-                << copy << std::endl;
-
-        // Test assignment operator
-        std::cout << std::endl
-                << CYAN << "Testing assignment operator:" << RESET << std::endl;
-        ClapTrap assigned("ToBeAssigned");
-        std::cout << "Before assignment:" << std::endl
-                << assigned << std::endl;
-
-        assigned = original; // Assignment operator
-        std::cout << "After assignment:" << std::endl
-                << assigned << std::endl;
-
-        // Test self-assignment
-        std::cout << std::endl
-                << CYAN << "Testing self-assignment:" << RESET << std::endl;
-        assigned = assigned; // Self-assignment should be safe
-        std::cout << "After self-assignment:" << std::endl
-                << assigned << std::endl;
+                << YELLOW << "=== Testing 0 hit points behavior ===" << RESET << std::endl;
+        ClapTrap healthTest("HealthTest");
+        
+        // Take damage to reduce hit points to 0
+        std::cout << GREEN << "Taking 10 points of damage to reduce hit points to 0:" << RESET << std::endl;
+        healthTest.takeDamage(10);
+        std::cout << "HealthTest current hit points: " << healthTest.getHitPoints() << std::endl;
+        
+        // These should fail due to 0 hit points
+        std::cout << RED << "Attempting actions with 0 hit points:" << RESET << std::endl;
+        healthTest.attack("dummy");
+        healthTest.beRepaired(5);
+        
+        // Test taking additional damage when already at 0 hit points
+        std::cout << GREEN << "Taking additional damage when already at 0 hit points:" << RESET << std::endl;
+        healthTest.takeDamage(5);
+        std::cout << "HealthTest current hit points: " << healthTest.getHitPoints() << std::endl;
     }
 }

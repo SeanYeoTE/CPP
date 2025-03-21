@@ -7,25 +7,26 @@
 ScavTrap::ScavTrap() : ClapTrap()
 {
 	std::cout << "ScavTrap default constructor called" << std::endl;
-	setMaxHitPoints(100);  // Set max HP first
-	setHitPoints(100);     // Then set current HP
-	setEnergyPoints(50);   // Use setter method
-	setAttackDamage(20);   // Use setter method
+	setMaxHitPoints(100); // Set max HP first
+	setHitPoints(100);    // Then set current HP
+	setEnergyPoints(50);  // Use setter method
+	setAttackDamage(20);  // Use setter method
 }
 
 ScavTrap::ScavTrap(std::string name) : ClapTrap(name)
 {
 	std::cout << "ScavTrap constructor called" << std::endl;
-	setMaxHitPoints(100);  // Set max HP first
-	setHitPoints(100);     // Then set current HP
-	setEnergyPoints(50);   // Use setter method
-	setAttackDamage(20);   // Use setter method
+	setMaxHitPoints(100); // Set max HP first
+	setHitPoints(100);    // Then set current HP
+	setEnergyPoints(50);  // Use setter method
+	setAttackDamage(20);  // Use setter method
 }
 
 ScavTrap::ScavTrap(const ScavTrap &src) : ClapTrap(src)
 {
 	std::cout << "ScavTrap copy constructor called" << std::endl;
 	// Copy the specific attributes if any
+	setMaxHitPoints(src.getMaxHitPoints());
 	setHitPoints(src.getHitPoints());
 	setEnergyPoints(src.getEnergyPoints());
 	setAttackDamage(src.getAttackDamage());
@@ -49,7 +50,7 @@ std::ostream &operator<<(std::ostream &o, ScavTrap const &i)
 	std::cout << "Hit Points: " << i.getHitPoints() << std::endl;
 	std::cout << "Energy Points: " << i.getEnergyPoints() << std::endl;
 	std::cout << "Attack Damage: " << i.getAttackDamage();
-	return o;
+	return (o);
 }
 
 ScavTrap &ScavTrap::operator=(const ScavTrap &other)
@@ -59,7 +60,7 @@ ScavTrap &ScavTrap::operator=(const ScavTrap &other)
 	{
 		ClapTrap::operator=(other); // Call base class assignment operator
 	}
-	return *this;
+	return (*this);
 }
 /*
 ** --------------------------------- METHODS ----------------------------------
@@ -74,11 +75,11 @@ void ScavTrap::attack(const std::string &target)
 	if (this->getEnergyPoints() <= 0 || this->getHitPoints() <= 0)
 	{
 		std::cout << "ScavTrap " << this->getName() << " has no hit points or energy points to attack!" << std::endl;
-		return;
+		return ;
 	}
 	else
 	{
-		std::cout << "ScavTrap " << this->getName() << " attacks " << target << ", causing " << this->getAttackDamage() << " points of damage!" << std::endl;
+		std::cout << "ScavTrap " << this->getName() << " attacks " << target << ", causing " << this->getAttackDamage() << " points of damage !" << std::endl;
 		this->setEnergyPoints(this->getEnergyPoints() - 1);
 		this->printEnergyPoints();
 	}

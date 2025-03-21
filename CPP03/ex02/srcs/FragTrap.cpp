@@ -7,6 +7,7 @@
 FragTrap::FragTrap() : ClapTrap()
 {
 	std::cout << "FragTrap default constructor called" << std::endl;
+	setMaxHitPoints(100); // Set max hit points first
 	setHitPoints(100);    // Use setter method
 	setEnergyPoints(100); // Use setter method
 	setAttackDamage(30);  // Use setter method
@@ -15,6 +16,7 @@ FragTrap::FragTrap() : ClapTrap()
 FragTrap::FragTrap(std::string name) : ClapTrap(name)
 {
 	std::cout << "FragTrap constructor called" << std::endl;
+	setMaxHitPoints(100); // Set max hit points first
 	setHitPoints(100);    // Use setter method
 	setEnergyPoints(100); // Use setter method
 	setAttackDamage(30);  // Use setter method
@@ -24,6 +26,7 @@ FragTrap::FragTrap(const FragTrap &src) : ClapTrap(src)
 {
 	std::cout << "FragTrap copy constructor called" << std::endl;
 	// Copy the specific attributes if any
+	setMaxHitPoints(src.getMaxHitPoints());
 	setHitPoints(src.getHitPoints());
 	setEnergyPoints(src.getEnergyPoints());
 	setAttackDamage(src.getAttackDamage());
