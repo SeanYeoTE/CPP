@@ -49,10 +49,10 @@ ClapTrap::~ClapTrap()
 
 std::ostream &operator<<(std::ostream &o, ClapTrap const &i)
 {
-	o << "ClapTrap " << i.getName() << ":" << std::endl;
-	o << "Hit Points: " << i.getHitPoints() << std::endl;
-	o << "Energy Points: " << i.getEnergyPoints() << std::endl;
-	o << "Attack Damage: " << i.getAttackDamage();
+	std::cout << "ClapTrap " << i.getName() << ":" << std::endl;
+	std::cout << "Hit Points: " << i.getHitPoints() << std::endl;
+	std::cout << "Energy Points: " << i.getEnergyPoints() << std::endl;
+	std::cout << "Attack Damage: " << i.getAttackDamage();
 	return o;
 }
 
