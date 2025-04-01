@@ -10,10 +10,10 @@ Dog::Dog()
 	setType("Dog");
 }
 
-Dog::Dog(const Dog &src)
+Dog::Dog(const Dog &src) : Animal(src)
 {
 	std::cout << "Dog copy constructor called" << std::endl;
-	setType(src.getType());
+	// setType(src.getType());
 }
 
 /*

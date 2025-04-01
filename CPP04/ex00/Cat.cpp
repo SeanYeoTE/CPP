@@ -10,7 +10,7 @@ Cat::Cat()
 	setType("Cat");
 }
 
-Cat::Cat(const Cat &src)
+Cat::Cat(const Cat &src) : Animal(src)
 {
 	std::cout << "Cat copy constructor called" << std::endl;
 	setType(src.getType());
