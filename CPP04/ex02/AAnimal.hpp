@@ -1,5 +1,5 @@
-#ifndef ANIMAL_HPP
-# define ANIMAL_HPP
+#ifndef AANIMAL_HPP
+# define AANIMAL_HPP
 
 # include <iostream>
 # include <string>
@@ -15,7 +15,7 @@ class Animal
 
 	void setType(std::string type);
 	std::string getType() const;
-	virtual void makeSound() const;
+	virtual void makeSound() const = 0;
 
   protected:
 	std::string type;

@@ -1,4 +1,4 @@
-#include "Animal.hpp"
+#include "AAnimal.hpp"
 
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
@@ -48,10 +48,6 @@ std::string Animal::getType() const
 	return (type);
 }
 
-void Animal::makeSound() const
-{
-	std::cout << "Animal sound" << std::endl;
-}
 /*
 ** --------------------------------- ACCESSOR ---------------------------------
 */

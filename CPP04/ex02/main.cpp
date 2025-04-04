@@ -1,4 +1,4 @@
-#include "Animal.hpp"
+#include "AAnimal.hpp"
 #include "Cat.hpp"
 #include "Dog.hpp"
 #include "WrongAnimal.hpp"
@@ -28,7 +28,7 @@ int	main(void)
 	// Basic Animal tests
 	{
 		std::cout << std::endl << YELLOW << "=== Testing Basic Animal Functionality ===" << RESET << std::endl;
-		const Animal *meta = new Animal();
+		// const Animal *meta = new Animal();
 		const Animal *j = new Dog();
 		const Animal *i = new Cat();
 
@@ -39,9 +39,9 @@ int	main(void)
 		std::cout << GREEN << "Animal sounds:" << RESET << std::endl;
 		std::cout << "i sound: "; i->makeSound(); // will output the cat sound!
 		std::cout << "j sound: "; j->makeSound();
-		std::cout << "meta sound: "; meta->makeSound();
+		// std::cout << "meta sound: "; meta->makeSound();
 
-		delete meta;
+		// delete meta;
 		delete j;
 		delete i;
 	}
