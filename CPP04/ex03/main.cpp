@@ -9,7 +9,6 @@
 #include <string>
 #include <limits>
 #include <cstdlib> // for system("clear")
-#include <iomanip> // for std::setw
 
 // Color definitions
 #define RESET   "\033[0m"
@@ -33,37 +32,37 @@ int main(void)
 	{
 		std::cout << std::endl << YELLOW << "=== BASIC TEST (from subject) ===" << RESET << std::endl;
 		
-		std::cout << CYAN << "Creating MateriaSource" << RESET << std::endl;
+		// std::cout << CYAN << "Creating MateriaSource" << RESET << std::endl;
 		IMateriaSource *src = new MateriaSource();
-		std::cout << GREEN << "Learning Ice materia" << RESET << std::endl;
+		// std::cout << GREEN << "Learning Ice materia" << RESET << std::endl;
 		src->learnMateria(new Ice());
-		std::cout << GREEN << "Learning Cure materia" << RESET << std::endl;
+		// std::cout << GREEN << "Learning Cure materia" << RESET << std::endl;
 		src->learnMateria(new Cure());
 
-		std::cout << CYAN << "Creating Character 'me'" << RESET << std::endl;
+		// std::cout << CYAN << "Creating Character 'me'" << RESET << std::endl;
 		ICharacter *me = new Character("me");
 
 		AMateria *tmp;
-		std::cout << GREEN << "Creating and equipping Ice materia" << RESET << std::endl;
+		// std::cout << GREEN << "Creating and equipping Ice materia" << RESET << std::endl;
 		tmp = src->createMateria("ice");
 		me->equip(tmp);
-		std::cout << GREEN << "Creating and equipping Cure materia" << RESET << std::endl;
+		// std::cout << GREEN << "Creating and equipping Cure materia" << RESET << std::endl;
 		tmp = src->createMateria("cure");
 		me->equip(tmp);
 
-		std::cout << CYAN << "Creating Character 'bob'" << RESET << std::endl;
+		// std::cout << CYAN << "Creating Character 'bob'" << RESET << std::endl;
 		ICharacter *bob = new Character("bob");
 
-		std::cout << BLUE << "Using materia at slot 0 on bob" << RESET << std::endl;
+		// std::cout << BLUE << "Using materia at slot 0 on bob" << RESET << std::endl;
 		me->use(0, *bob);
-		std::cout << BLUE << "Using materia at slot 1 on bob" << RESET << std::endl;
+		// std::cout << BLUE << "Using materia at slot 1 on bob" << RESET << std::endl;
 		me->use(1, *bob);
 
-		std::cout << MAGENTA << "Destroying bob" << RESET << std::endl;
+		// std::cout << MAGENTA << "Destroying bob" << RESET << std::endl;
 		delete bob;
-		std::cout << MAGENTA << "Destroying me" << RESET << std::endl;
+		// std::cout << MAGENTA << "Destroying me" << RESET << std::endl;
 		delete me;
-		std::cout << MAGENTA << "Destroying MateriaSource" << RESET << std::endl;
+		// std::cout << MAGENTA << "Destroying MateriaSource" << RESET << std::endl;
 		delete src;
 	} // All objects are destroyed here
 
@@ -289,6 +288,9 @@ int main(void)
 		std::cout << BLUE << "  Using materia at slot 3" << RESET << std::endl;
 		alice->use(3, *bob);
 		
+		std::cout << MAGENTA << "Destroying Alice" << RESET << std::endl;
+		delete alice;
+
 		std::cout << GREEN << "Copied Alice:" << RESET << std::endl;
 		std::cout << BLUE << "  Using materia at slot 0" << RESET << std::endl;
 		alice_copy->use(0, *bob);
@@ -299,8 +301,6 @@ int main(void)
 		std::cout << BLUE << "  Using materia at slot 3" << RESET << std::endl;
 		alice_copy->use(3, *bob);
 		
-		std::cout << MAGENTA << "Destroying Alice" << RESET << std::endl;
-		delete alice;
 		std::cout << MAGENTA << "Destroying Alice copy" << RESET << std::endl;
 		delete alice_copy;
 		std::cout << MAGENTA << "Destroying Bob" << RESET << std::endl;

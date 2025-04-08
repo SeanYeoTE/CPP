@@ -6,21 +6,21 @@
 
 Character::Character() : _name("default")
 {
-	std::cout << "Character default constructor called" << std::endl;
+	// std::cout << "Character default constructor called" << std::endl;
 	for (int i = 0; i < 4; i++)
 		this->_inventory[i] = NULL;
 }
 
 Character::Character(std::string name) : _name(name)
 {
-	std::cout << "Character name constructor called" << std::endl;
+	// std::cout << "Character name constructor called" << std::endl;
 	for (int i = 0; i < 4; i++)
 		this->_inventory[i] = NULL;
 }
 
 Character::Character(const Character &src)
 {
-	std::cout << "Character copy constructor called" << std::endl;
+	// std::cout << "Character copy constructor called" << std::endl;
 	this->_name = src.getName();
 	// Initialize inventory to NULL
 	for (int i = 0; i < 4; i++)
@@ -39,7 +39,7 @@ Character::Character(const Character &src)
 
 Character::~Character()
 {
-	std::cout << "Character destructor called" << std::endl;
+	// std::cout << "Character destructor called" << std::endl;
 	for (int i = 0; i < 4; i++)
 	{
 		if (this->_inventory[i])
@@ -53,7 +53,7 @@ Character::~Character()
 
 Character &Character::operator=(Character const &rhs)
 {
-	std::cout << "Character assignation operator called" << std::endl;
+	// std::cout << "Character assignation operator called" << std::endl;
 	if (this != &rhs)
 	{
 		this->_name = rhs.getName();
@@ -90,7 +90,7 @@ void Character::equip(AMateria *m)
 		if (this->_inventory[i] == NULL)
 		{
 			this->_inventory[i] = m;
-			std::cout << this->_name << " equipped " << m->getType() << std::endl;
+			// std::cout << this->_name << " equipped " << m->getType() << std::endl;
 			return ;
 		}
 	}

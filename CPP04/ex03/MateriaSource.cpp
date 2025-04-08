@@ -6,14 +6,14 @@
 
 MateriaSource::MateriaSource() : _index(0)
 {
-	std::cout << "MateriaSource default constructor called" << std::endl;
+	// std::cout << "MateriaSource default constructor called" << std::endl;
 	for (int i = 0; i < 4; i++)
 		this->_materia[i] = NULL;
 }
 
 MateriaSource::MateriaSource(const MateriaSource &src) : _index(0)
 {
-	std::cout << "MateriaSource copy constructor called" << std::endl;
+	// std::cout << "MateriaSource copy constructor called" << std::endl;
 	
 	// Initialize materia to NULL
 	for (int i = 0; i < 4; i++)
@@ -36,7 +36,7 @@ MateriaSource::MateriaSource(const MateriaSource &src) : _index(0)
 
 MateriaSource::~MateriaSource()
 {
-	std::cout << "MateriaSource destructor called" << std::endl;
+	// std::cout << "MateriaSource destructor called" << std::endl;
 	for (int i = 0; i < 4; i++)
 	{
 		if (this->_materia[i])
@@ -50,7 +50,7 @@ MateriaSource::~MateriaSource()
 
 MateriaSource &MateriaSource::operator=(MateriaSource const &rhs)
 {
-	std::cout << "MateriaSource assignation operator called" << std::endl;
+	// std::cout << "MateriaSource assignation operator called" << std::endl;
 	for (int i = 0; i < 4; i++)
 	{
 		if (this->_materia[i])
@@ -82,11 +82,13 @@ void MateriaSource::learnMateria(AMateria *m)
 	}
 	else if (!m)
 	{
-		// std::cout << "Cannot learn NULL materia" << std::endl;
+		std::cout << "Cannot learn NULL materia" << std::endl;
 	}
 	else
 	{
-		// std::cout << "MateriaSource is full" << std::endl;
+		std::cout << "MateriaSource is full" << std::endl;
+		// Delete the materia if we can't learn it to prevent memory leak
+		delete m;
 	}
 }
 
