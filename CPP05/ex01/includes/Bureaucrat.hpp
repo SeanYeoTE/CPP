@@ -4,6 +4,8 @@
 # include <iostream>
 # include <string>
 
+class Form;
+
 class Bureaucrat
 {
 
@@ -20,6 +22,7 @@ class Bureaucrat
 
 		void incrementGrade();
 		void decrementGrade();
+		void signForm(Form &form_ref);
 
 		// Exceptions
 		class BureaucratException : public std::exception
@@ -47,5 +50,7 @@ class Bureaucrat
 };
 
 std::ostream &			operator<<( std::ostream & o, Bureaucrat const & i );
+
+#include "Form.hpp"
 
 #endif /* ****************************************************** BUREAUCRAT_H */

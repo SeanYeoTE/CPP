@@ -48,7 +48,7 @@ Form &Form::operator=(Form const &rhs)
 
 std::ostream &operator<<(std::ostream &o, Form const &i)
 {
-	std::cout << i.getName() << " , form grade to sign " << i.getGradeToSign() << " , form grade to execute " << i.getGradeToExecute() << std::endl;
+	std::cout << i.getName() << " , form grade to sign " << i.getGradeToSign() << " , form grade to execute " << i.getGradeToExecute();
 	return (o);
 }
 

@@ -46,7 +46,7 @@ Bureaucrat &				Bureaucrat::operator=( Bureaucrat const & rhs )
 
 std::ostream &			operator<<( std::ostream & o, Bureaucrat const & i )
 {
-	std::cout << i.getName() << " , bureaucrat grade " << i.getGrade() << std::endl;
+	std::cout << i.getName() << " , bureaucrat grade " << i.getGrade();
 	return o;
 }
 
@@ -54,6 +54,17 @@ std::ostream &			operator<<( std::ostream & o, Bureaucrat const & i )
 /*
 ** --------------------------------- METHODS ----------------------------------
 */
+
+const char *Bureaucrat::GradeTooHighException::what() const throw()
+{
+	return ("Grade is too high");
+}
+
+const char *Bureaucrat::GradeTooLowException::what() const throw()
+{
+	return ("Grade is too low");
+}
+
 void Bureaucrat::incrementGrade()
 {
 	if (_grade == 1)
@@ -68,6 +79,10 @@ void Bureaucrat::decrementGrade()
 	_grade++;
 }
 
+void Bureaucrat::signForm(Form &form_ref)
+{
+	form_ref.beSigned(this->getGrade());
+}
 
 /*
 ** --------------------------------- ACCESSOR ---------------------------------
