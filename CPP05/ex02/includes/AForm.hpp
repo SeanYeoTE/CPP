@@ -4,23 +4,24 @@
 # include <iostream>
 # include <string>
 
-class Form
+class AForm
 {
 
 	public:
 
-		Form();
-		Form( std::string name, int gradeToSign, int gradeToExecute );
-		Form( Form const & src );
-		~Form();
-		Form &		operator=( Form const & rhs );
+		AForm();
+		AForm( std::string name, int gradeToSign, int gradeToExecute );
+		AForm( AForm const & src );
+		~AForm();
+		AForm &		operator=( AForm const & rhs );
 
 
 		const std::string & getName() const;
 		const bool & getIsSigned() const;
 		const int & getGradeToSign() const;
 		const int & getGradeToExecute() const;
-		void beSigned(int grade);
+		void setIsSigned(bool ran);
+		virtual void beSigned(int grade) = 0;
 		
 		class FormException : public std::exception
 		{
@@ -39,6 +40,11 @@ class Form
 			public:
 					virtual const char* what() const throw();
 		};
+		class FormNotSignedException : public FormException
+		{
+			public:
+					virtual const char* what() const throw();
+		};
 
 	private:
 		const std::string _name;
@@ -48,6 +54,6 @@ class Form
 
 };
 
-std::ostream &			operator<<( std::ostream & o, Form const & i );
+std::ostream &			operator<<( std::ostream & o, AForm const & i );
 
 #endif /* ************************************************************ FORM_H */

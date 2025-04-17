@@ -1,5 +1,6 @@
+#include "../includes/AForm.hpp"
 #include "../includes/Bureaucrat.hpp"
-#include "../includes/Form.hpp"
+#include "../includes/ShrubberyCreationForm.hpp"
 #include <cstdlib>
 #include <exception>
 #include <iostream>
@@ -22,89 +23,45 @@ void	waitForUserInput(void)
 int	main(void)
 {
 	system("clear");
-	std::cout << YELLOW << "=== Test Bureaucrat Constructor and Destructor ===" << RESET << std::endl;
+
+	std::cout << YELLOW << "=== Test ShrubberyCreationForm Constructor and Destructor ===" << RESET << std::endl;
 	try
 	{
-		Bureaucrat b("John", 1);
-		std::cout << GREEN << b << RESET << std::endl;
+		ShrubberyCreationForm form1("Garden");
+		std::cout << GREEN << "Form created: " << form1 << RESET << std::endl;
 	}
-	catch (const Bureaucrat::BureaucratException &e)
+	catch (const std::exception &e)
 	{
 		std::cerr << RED << e.what() << RESET << std::endl;
 	}
 	waitForUserInput();
 	system("clear");
 
-	std::cout << YELLOW << "=== Test Bureaucrat Copy Constructor and Assignment Operator ===" << RESET << std::endl;
+	std::cout << YELLOW << "=== Test ShrubberyCreationForm Copy Constructor and Assignment Operator ===" << RESET << std::endl;
 	try
 	{
-		Bureaucrat b1("Alice", 50);
-		Bureaucrat b2 = b1; // Copy constructor
-		Bureaucrat b3("Temp", 160);
-		b3 = b1; // Assignment operator
-		std::cout << GREEN << b2 << RESET << std::endl;
-		std::cout << GREEN << b3 << RESET << std::endl;
+		ShrubberyCreationForm form1("Park");
+		ShrubberyCreationForm form2 = form1; // Copy constructor
+		ShrubberyCreationForm form3("Temp");
+		form3 = form1; // Assignment operator
+		std::cout << GREEN << "Copied form: " << form2 << RESET << std::endl;
+		std::cout << GREEN << "Assigned form: " << form3 << RESET << std::endl;
 	}
-	catch (const Bureaucrat::BureaucratException &e)
+	catch (const std::exception &e)
 	{
 		std::cerr << RED << e.what() << RESET << std::endl;
 	}
 	waitForUserInput();
 	system("clear");
 
-	std::cout << YELLOW << "=== Test Bureaucrat Increment and Decrement Grade ===" << RESET << std::endl;
+	std::cout << YELLOW << "=== Test ShrubberyCreationForm Execution ===" << RESET << std::endl;
 	try
 	{
-		Bureaucrat b("Doe", 2);
-		b.incrementGrade();
-		std::cout << GREEN << b << RESET << std::endl;
-		b.decrementGrade();
-		std::cout << GREEN << b << RESET << std::endl;
-	}
-	catch (const Bureaucrat::BureaucratException &e)
-	{
-		std::cerr << RED << e.what() << RESET << std::endl;
-	}
-	waitForUserInput();
-	system("clear");
-
-	std::cout << YELLOW << "=== Test Form Constructor and Destructor ===" << RESET << std::endl;
-	try
-	{
-		Form f("Form1", 1, 150);
-		std::cout << GREEN << f << RESET << std::endl;
-	}
-	catch (const Form::FormException &e)
-	{
-		std::cerr << RED << e.what() << RESET << std::endl;
-	}
-	waitForUserInput();
-	system("clear");
-
-	std::cout << YELLOW << "=== Test Form Copy Constructor and Assignment Operator ===" << RESET << std::endl;
-	try
-	{
-		Form f1("Form2", 50, 100);
-		Form f2 = f1; // Copy constructor
-		Form f3("TempForm", 75, 125);
-		f3 = f1; // Assignment operator
-		std::cout << GREEN << f2 << RESET << std::endl;
-		std::cout << GREEN << f3 << RESET << std::endl;
-	}
-	catch (const Form::FormException &e)
-	{
-		std::cerr << RED << e.what() << RESET << std::endl;
-	}
-	waitForUserInput();
-	system("clear");
-
-	std::cout << YELLOW << "=== Test Form beSigned ===" << RESET << std::endl;
-	try
-	{
-		Bureaucrat b("Signer", 55);
-		Form f("Form3", 50, 100);
-		f.beSigned(b.getGrade());
-		std::cout << GREEN << f << RESET << std::endl;
+		Bureaucrat b("Executor", 1);
+		ShrubberyCreationForm form("Backyard");
+		b.signForm(form);
+		form.execute(b); // Call execute
+		std::cout << GREEN << "Form executed successfully." << RESET << std::endl;
 	}
 	catch (const std::exception &e)
 	{

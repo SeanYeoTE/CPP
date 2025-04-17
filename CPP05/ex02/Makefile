@@ -6,7 +6,7 @@
 #    By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 15:24:04 by seayeo            #+#    #+#              #
-#    Updated: 2025/04/09 14:01:25 by seayeo           ###   ########.fr        #
+#    Updated: 2025/04/17 16:59:45 by seayeo           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ OBJ_DIR  = objs
 INC_DIR  = includes
 
 # Source files
-SRC_FILES = main.cpp Bureaucrat.cpp Form.cpp
+SRC_FILES = main.cpp Bureaucrat.cpp AForm.cpp ShrubberyCreationForm.cpp
 
 # List of source files with directory prefix
 SRCS     = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
