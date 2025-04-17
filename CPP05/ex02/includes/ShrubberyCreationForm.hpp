@@ -6,21 +6,21 @@
 # include <iostream>
 # include <string>
 
-class ShrubberyCreationForm : public AForm // Explicitly inherit from AForm
+class ShrubberyCreationForm : public AForm
 {
-  public:
-	ShrubberyCreationForm();
-	ShrubberyCreationForm(ShrubberyCreationForm const &src);
-	~ShrubberyCreationForm();
-	ShrubberyCreationForm &operator=(ShrubberyCreationForm const &rhs);
+	public:
+		ShrubberyCreationForm();
+		ShrubberyCreationForm(ShrubberyCreationForm const &src);
+		~ShrubberyCreationForm();
+		ShrubberyCreationForm &operator=(ShrubberyCreationForm const &rhs);
 
-	ShrubberyCreationForm(std::string target);
+		ShrubberyCreationForm(std::string target);
 
-	void beSigned(int grade);
-	void execute(Bureaucrat const &executor) const;
+		void beSigned(int grade);
+		void execute(Bureaucrat const &executor) const;
 
-  private:
-	std::string _target;
+	private:
+		std::string _target;
 };
 
 #endif /* ******************************************* SHRUBBERYCREATIONFORM_H */

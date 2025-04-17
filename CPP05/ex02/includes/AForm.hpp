@@ -4,6 +4,8 @@
 # include <iostream>
 # include <string>
 
+class Bureaucrat;
+
 class AForm
 {
 
@@ -21,8 +23,11 @@ class AForm
 		const int & getGradeToSign() const;
 		const int & getGradeToExecute() const;
 		void setIsSigned(bool ran);
+
 		virtual void beSigned(int grade) = 0;
-		
+		virtual void execute(Bureaucrat const &executor) const = 0;
+
+
 		class FormException : public std::exception
 		{
 			public:

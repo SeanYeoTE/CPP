@@ -6,7 +6,7 @@
 #    By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 15:24:04 by seayeo            #+#    #+#              #
-#    Updated: 2025/04/17 16:59:45 by seayeo           ###   ########.fr        #
+#    Updated: 2025/04/17 19:25:00 by seayeo           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,8 @@ OBJ_DIR  = objs
 INC_DIR  = includes
 
 # Source files
-SRC_FILES = main.cpp Bureaucrat.cpp AForm.cpp ShrubberyCreationForm.cpp
+SRC_FILES = main.cpp Bureaucrat.cpp AForm.cpp ShrubberyCreationForm.cpp \
+			RobotomyRequestForm.cpp
 
 # List of source files with directory prefix
 SRCS     = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
@@ -34,7 +35,7 @@ RM       = rm -f
 DEPS     = $(OBJS:.o=.d)
 
 # Program name (of executable)
-NAME     = ex01
+NAME     = ex02
 
 # Targets
 .PHONY: all clean fclean re
