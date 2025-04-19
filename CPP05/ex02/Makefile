@@ -6,7 +6,7 @@
 #    By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 15:24:04 by seayeo            #+#    #+#              #
-#    Updated: 2025/04/17 19:25:00 by seayeo           ###   ########.fr        #
+#    Updated: 2025/04/19 16:44:10 by seayeo           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ INC_DIR  = includes
 
 # Source files
 SRC_FILES = main.cpp Bureaucrat.cpp AForm.cpp ShrubberyCreationForm.cpp \
-			RobotomyRequestForm.cpp
+			RobotomyRequestForm.cpp PresidentialPardonForm.cpp
 
 # List of source files with directory prefix
 SRCS     = $(addprefix $(SRC_DIR)/, $(SRC_FILES))

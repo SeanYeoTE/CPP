@@ -8,19 +8,18 @@
 
 class RobotomyRequestForm : public AForm
 {
-    public:
-        RobotomyRequestForm();
-        RobotomyRequestForm(RobotomyRequestForm const &src);
-        ~RobotomyRequestForm();
-        RobotomyRequestForm &operator=(RobotomyRequestForm const &rhs);
+  public:
+	RobotomyRequestForm();
+	RobotomyRequestForm(RobotomyRequestForm const &src);
+	~RobotomyRequestForm();
+	RobotomyRequestForm &operator=(RobotomyRequestForm const &rhs);
 
-        RobotomyRequestForm(std::string target);
+	RobotomyRequestForm(std::string target);
 
-        void beSigned(int grade);
-        void execute(Bureaucrat const &executor) const;
+	void execute(Bureaucrat const &executor) const;
 
-    private:
-		std::string _target;
+  private:
+	std::string _target;
 };
 
 #endif

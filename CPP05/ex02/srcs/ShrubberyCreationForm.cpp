@@ -31,14 +31,6 @@ ShrubberyCreationForm::~ShrubberyCreationForm()
 {
 }
 
-// beSigned Method
-void ShrubberyCreationForm::beSigned(int grade)
-{
-	if (grade > this->getGradeToSign())
-		throw AForm::GradeTooLowException();
-	this->setIsSigned(true);
-}
-
 // execute Method
 void ShrubberyCreationForm::execute(Bureaucrat const &executor) const
 {
@@ -51,7 +43,7 @@ void ShrubberyCreationForm::execute(Bureaucrat const &executor) const
 	{
 		std::ofstream ofs;
 		ofs.open((this->_target + "_shrubbery").c_str());
-			// Use .c_str() for conversion
+		// Use .c_str() for conversion
 		ofs << "              _{\\ _{\\{\\/}/}/}__" << std::endl;
 		ofs << "             {/{/\\}{/{/\\}(\\}{/\\} _" << std::endl;
 		ofs << "            {/{/\\}{/{/\\}(_)\\}{/{/\\}  _" << std::endl;

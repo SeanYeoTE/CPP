@@ -2,6 +2,7 @@
 #include "../includes/Bureaucrat.hpp"
 #include "../includes/RobotomyRequestForm.hpp"
 #include "../includes/ShrubberyCreationForm.hpp"
+#include "../includes/PresidentialPardonForm.hpp"
 #include <cstdlib>
 #include <exception>
 #include <iostream>
@@ -106,6 +107,52 @@ int	main(void)
 	{
 		Bureaucrat b("Executor", 1);
 		RobotomyRequestForm form("Workshop");
+		b.signForm(form);
+		form.execute(b); // Call execute
+		std::cout << GREEN << "Form executed successfully." << RESET << std::endl;
+	}
+	catch (const std::exception &e)
+	{
+		std::cerr << RED << e.what() << RESET << std::endl;
+	}
+	waitForUserInput();
+	system("clear");
+
+	std::cout << YELLOW << "=== Test PresidentialPardonForm Constructor and Destructor ===" << RESET << std::endl;
+	try
+	{
+		PresidentialPardonForm form1("Citizen");
+		std::cout << GREEN << "Form created: " << form1 << RESET << std::endl;
+	}
+	catch (const std::exception &e)
+	{
+		std::cerr << RED << e.what() << RESET << std::endl;
+	}
+	waitForUserInput();
+	system("clear");
+
+	std::cout << YELLOW << "=== Test PresidentialPardonForm Copy Constructor and Assignment Operator ===" << RESET << std::endl;
+	try
+	{
+		PresidentialPardonForm form1("Individual");
+		PresidentialPardonForm form2 = form1; // Copy constructor
+		PresidentialPardonForm form3("Temp");
+		form3 = form1; // Assignment operator
+		std::cout << GREEN << "Copied form: " << form2 << RESET << std::endl;
+		std::cout << GREEN << "Assigned form: " << form3 << RESET << std::endl;
+	}
+	catch (const std::exception &e)
+	{
+		std::cerr << RED << e.what() << RESET << std::endl;
+	}
+	waitForUserInput();
+	system("clear");
+
+	std::cout << YELLOW << "=== Test PresidentialPardonForm Execution ===" << RESET << std::endl;
+	try
+	{
+		Bureaucrat b("Executor", 1);
+		PresidentialPardonForm form("Target");
 		b.signForm(form);
 		form.execute(b); // Call execute
 		std::cout << GREEN << "Form executed successfully." << RESET << std::endl;

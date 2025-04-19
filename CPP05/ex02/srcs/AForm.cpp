@@ -99,14 +99,15 @@ void AForm::setIsSigned(bool ran)
 {
 	_isSigned = ran;
 }
-// void AForm::beSigned(int grade)
-// {
-// 	if (grade > _gradeToSign)
-// 		throw AForm::GradeTooLowException();
-// 	else
-// 	{
-// 		_isSigned = true;
-// 		std::cout << "AForm " << _name << " signed by grade " << grade << std::endl;
-// 	}
-// }
+
+void AForm::beSigned(int grade)
+{
+	if (grade > _gradeToSign)
+		throw AForm::GradeTooLowException();
+	else
+	{
+		_isSigned = true;
+		std::cout << "AForm " << _name << " signed by grade " << grade << std::endl;
+	}
+}
 /* ************************************************************************** */
