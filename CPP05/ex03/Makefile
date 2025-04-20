@@ -6,7 +6,7 @@
 #    By: seayeo <seayeo@42.sg>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 15:24:04 by seayeo            #+#    #+#              #
-#    Updated: 2025/04/20 16:18:03 by seayeo           ###   ########.fr        #
+#    Updated: 2025/04/20 16:18:11 by seayeo           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,8 +21,8 @@ INC_DIR  = includes
 
 # Source files
 SRC_FILES = main.cpp Bureaucrat.cpp AForm.cpp ShrubberyCreationForm.cpp \
-			RobotomyRequestForm.cpp PresidentialPardonForm.cpp
-
+			RobotomyRequestForm.cpp PresidentialPardonForm.cpp \
+			Intern.cpp
 # List of source files with directory prefix
 SRCS     = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 
@@ -35,7 +35,7 @@ RM       = rm -f
 DEPS     = $(OBJS:.o=.d)
 
 # Program name (of executable)
-NAME     = ex02
+NAME     = ex03
 
 # Targets
 .PHONY: all clean fclean re
