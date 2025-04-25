@@ -10,17 +10,11 @@ ScalarConverter::ScalarConverter(void)
 // Destructor
 ScalarConverter::~ScalarConverter()
 {
-	// ...existing code...
 }
 
 // Copy Constructor
 ScalarConverter::ScalarConverter(const ScalarConverter &ans)
 {
-	this->_char = ans._char;
-	this->_int = ans._int;
-	this->_float = ans._float;
-	this->_double = ans._double;
-	this->_str = ans._str;
 }
 
 // Assignment Operator
@@ -30,59 +24,15 @@ ScalarConverter &ScalarConverter::operator=(const ScalarConverter &ans)
 	return (*this);
 }
 
-// Getter and Setter for char
-char ScalarConverter::getChar(void) const
-{
-	return (this->_char);
-}
 
-void ScalarConverter::setChar(char c)
-{
-	this->_char = c;
-}
-
-// Getter and Setter for int
-int ScalarConverter::getInt(void) const
-{
-	return (this->_int);
-}
-
-void ScalarConverter::setInt(int n)
-{
-	this->_int = n;
-}
-
-// Getter and Setter for float
-float ScalarConverter::getFloat(void) const
-{
-	return (this->_float);
-}
-
-void ScalarConverter::setFloat(float f)
-{
-	this->_float = f;
-}
-
-// Getter and Setter for double
-double ScalarConverter::getDouble(void) const
-{
-	return (this->_double);
-}
-
-void ScalarConverter::setDouble(double d)
-{
-	this->_double = d;
-}
-
-
-bool ScalarConverter::isChar(std::string str) const
+bool ScalarConverter::isChar(const std::string &str)
 {
 	if (str.length() == 1 && isprint(str[0]))
 		return (true);
 	return (false);
 }
 
-bool ScalarConverter::isInt(std::string str) const
+bool ScalarConverter::isInt(const std::string &str)
 {
 	for (size_t i = 0; i < str.length(); i++)
 	{
@@ -93,7 +43,7 @@ bool ScalarConverter::isInt(std::string str) const
 }
 
 // Helper method to check for special literals
-ScalarConverter::SpecialType ScalarConverter::checkSpecialLiteral(const std::string &input) const
+ScalarConverter::SpecialType ScalarConverter::checkSpecialLiteral(const std::string &input)
 {
     // Remove 'f' suffix if present for uniform checking
     std::string str = input;
@@ -116,7 +66,7 @@ ScalarConverter::SpecialType ScalarConverter::checkSpecialLiteral(const std::str
     return NOT_SPECIAL;
 }
 
-bool ScalarConverter::isFloat(std::string str) const
+bool ScalarConverter::isFloat(const std::string &str)
 {
     // Check for special float values using the helper method
     SpecialType specialType = checkSpecialLiteral(str);
@@ -147,7 +97,7 @@ bool ScalarConverter::isFloat(std::string str) const
     return (hasF && dotCount <= 1);
 }
 
-bool ScalarConverter::isDouble(std::string str) const
+bool ScalarConverter::isDouble(const std::string &str)
 {
     // Check for special double values using the helper method
     SpecialType specialType = checkSpecialLiteral(str);
@@ -169,7 +119,7 @@ bool ScalarConverter::isDouble(std::string str) const
     return (dotCount == 1);
 }
 
-void ScalarConverter::checktype(const std::string &input)
+ScalarConverter::Type ScalarConverter::checktype(const std::string &input)
 {
     // First check if it's a special literal
     SpecialType specialType = checkSpecialLiteral(input);
@@ -178,140 +128,123 @@ void ScalarConverter::checktype(const std::string &input)
     {
         // Determine if it's a float or double based on 'f' suffix
         if (input.length() > 0 && input[input.length() - 1] == 'f')
-            this->_type = 2; // Float
+            return FLOAT; // Float
         else
-            this->_type = 3; // Double
+            return DOUBLE; // Double
     }
     else if (isChar(input))
-        this->_type = 0;
+        return CHAR;
     else if (isInt(input))
-        this->_type = 1;
+        return INT;
     else if (isFloat(input))
-        this->_type = 2;
+        return FLOAT;
     else if (isDouble(input))
-        this->_type = 3;
+        return DOUBLE;
     else
-        this->_type = 3; // Default to double for unrecognized inputs
+        return DOUBLE; // Default to double for unrecognized inputs
 }
 
-void ScalarConverter::firstconvert(const std::string &input)
-{
-	int	_type;
+// void ScalarConverter::firstconvert(const std::string &input)
+// {
+// 	int	_type;
 
-	_type = this->_type;
-	switch (_type)
-	{
-	case 0:
-		convertChar(input);
-		break ;
-	case 1:
-		convertInt(input);
-		break ;
-	case 2:
-		convertFloat(input);
-		break ;
-	case 3:
-		convertDouble(input);
-		break ;
-	default:
-		throw std::invalid_argument("Invalid type");
-		break ;
-	}
-}
+// 	_type = this->_type;
+// 	switch (_type)
+// 	{
+// 	case 0:
+// 		convertChar(input);
+// 		break ;
+// 	case 1:
+// 		convertInt(input);
+// 		break ;
+// 	case 2:
+// 		convertFloat(input);
+// 		break ;
+// 	case 3:
+// 		convertDouble(input);
+// 		break ;
+// 	default:
+// 		throw std::invalid_argument("Invalid type");
+// 		break ;
+// 	}
+// }
 
-// Static method to get the singleton instance
-ScalarConverter& ScalarConverter::getInstance(void)
-{
-	static ScalarConverter instance;
-	return instance;
-}
+// void ScalarConverter::convertChar(const std::string &input)
+// {
+// 	this->_char = input[0];
+// }
 
-void ScalarConverter::convert(const std::string &input)
-{
-	// Get the static instance to use the private methods
-	ScalarConverter &converter = getInstance();
-	
-	// Use the instance to check the type and convert
-	converter.checktype(input);
-	converter.firstconvert(input);
-}
+// void ScalarConverter::convertInt(const std::string &input)
+// {
+// 	// Convert to int directly without try-catch
+// 	this->_int = std::atoi(input.c_str());
+// }
 
-void ScalarConverter::convertChar(const std::string &input)
-{
-	this->_char = input[0];
-}
-
-void ScalarConverter::convertInt(const std::string &input)
-{
-	// Convert to int directly without try-catch
-	this->_int = std::atoi(input.c_str());
-}
-
-void ScalarConverter::convertFloat(const std::string &input)
-{
-    // Check if it's a special literal
-    SpecialType specialType = checkSpecialLiteral(input);
+// void ScalarConverter::convertFloat(const std::string &input)
+// {
+//     // Check if it's a special literal
+//     SpecialType specialType = checkSpecialLiteral(input);
     
-    if (specialType != NOT_SPECIAL)
-    {
-        // Handle special values
-        switch (specialType)
-        {
-            case NAN_VALUE:
-                this->_float = std::numeric_limits<float>::quiet_NaN();
-                break;
-            case POS_INF:
-                this->_float = std::numeric_limits<float>::infinity();
-                break;
-            case NEG_INF:
-                this->_float = -std::numeric_limits<float>::infinity();
-                break;
-            default:
-                break;
-        }
-        return;
-    }
+//     if (specialType != NOT_SPECIAL)
+//     {
+//         // Handle special values
+//         switch (specialType)
+//         {
+//             case NAN_VALUE:
+//                 this->_float = std::numeric_limits<float>::quiet_NaN();
+//                 break;
+//             case POS_INF:
+//                 this->_float = std::numeric_limits<float>::infinity();
+//                 break;
+//             case NEG_INF:
+//                 this->_float = -std::numeric_limits<float>::infinity();
+//                 break;
+//             default:
+//                 break;
+//         }
+//         return;
+//     }
 
-    // Regular float conversion
-    // Remove 'f' suffix if present for conversion
-    std::string tmp = input;
-    if (tmp.length() > 0 && tmp[tmp.length() - 1] == 'f')
-        tmp = tmp.substr(0, tmp.length() - 1);
+//     // Regular float conversion
+//     // Remove 'f' suffix if present for conversion
+//     std::string tmp = input;
+//     if (tmp.length() > 0 && tmp[tmp.length() - 1] == 'f')
+//         tmp = tmp.substr(0, tmp.length() - 1);
         
-    this->_float = std::atof(tmp.c_str());
-}
+//     this->_float = std::atof(tmp.c_str());
+// }
 
-void ScalarConverter::convertDouble(const std::string &input)
-{
-    // Check if it's a special literal
-    SpecialType specialType = checkSpecialLiteral(input);
+// void ScalarConverter::convertDouble(const std::string &input)
+// {
+//     // Check if it's a special literal
+//     SpecialType specialType = checkSpecialLiteral(input);
     
-    if (specialType != NOT_SPECIAL)
-    {
-        // Handle special values
-        switch (specialType)
-        {
-            case NAN_VALUE:
-                this->_double = std::numeric_limits<double>::quiet_NaN();
-                break;
-            case POS_INF:
-                this->_double = std::numeric_limits<double>::infinity();
-                break;
-            case NEG_INF:
-                this->_double = -std::numeric_limits<double>::infinity();
-                break;
-            default:
-                break;
-        }
-        return;
-    }
+//     if (specialType != NOT_SPECIAL)
+//     {
+//         // Handle special values
+//         switch (specialType)
+//         {
+//             case NAN_VALUE:
+//                 this->_double = std::numeric_limits<double>::quiet_NaN();
+//                 break;
+//             case POS_INF:
+//                 this->_double = std::numeric_limits<double>::infinity();
+//                 break;
+//             case NEG_INF:
+//                 this->_double = -std::numeric_limits<double>::infinity();
+//                 break;
+//             default:
+//                 break;
+//         }
+//         return;
+//     }
 
-    // Regular double conversion
-    this->_double = std::atof(input.c_str());
-}
+//     // Regular double conversion
+//     this->_double = std::atof(input.c_str());
+// }
 
 // Helper function to display char value
-void ScalarConverter::displayChar(double sourceValue, bool isNan, int infSign) const
+void ScalarConverter::displayChar(double sourceValue, bool isNan, int infSign)
 {
 	std::cout << "char: ";
 	if (isNan || infSign != 0 || sourceValue < 0 || sourceValue > 127)
@@ -327,7 +260,7 @@ void ScalarConverter::displayChar(double sourceValue, bool isNan, int infSign) c
 }
 
 // Helper function to display int value
-void ScalarConverter::displayInt(double sourceValue, bool isNan, int infSign) const
+void ScalarConverter::displayInt(double sourceValue, bool isNan, int infSign)
 {
 	std::cout << "int: ";
 	if (isNan || infSign != 0 || 
@@ -343,7 +276,7 @@ void ScalarConverter::displayInt(double sourceValue, bool isNan, int infSign) co
 }
 
 // Helper function to display float value
-void ScalarConverter::displayFloat(double sourceValue, bool isNan, int infSign) const
+void ScalarConverter::displayFloat(double sourceValue, bool isNan, int infSign)
 {
 	std::cout << "float: ";
 	if (isNan)
@@ -367,7 +300,7 @@ void ScalarConverter::displayFloat(double sourceValue, bool isNan, int infSign) 
 }
 
 // Helper function to display double value
-void ScalarConverter::displayDouble(double sourceValue, bool isNan, int infSign) const
+void ScalarConverter::displayDouble(double sourceValue, bool isNan, int infSign)
 {
 	std::cout << "double: ";
 	if (isNan)
@@ -384,47 +317,55 @@ void ScalarConverter::displayDouble(double sourceValue, bool isNan, int infSign)
 	std::cout << std::endl;
 }
 
-void ScalarConverter::display(void)
+void ScalarConverter::convert(const std::string& input)
 {
-	// Get the values from the static instance used in convert
-	ScalarConverter &converter = getInstance();
-	
-	// Get the source value based on the identified type
-	double sourceValue;
-	bool isNan = false;
-	int infSign = 0; // 0 for not inf, 1 for +inf, -1 for -inf
-	
-	// Extract source value and check for special types
-	switch (converter._type)
-	{
-	case 0: // char
-		sourceValue = static_cast<double>(converter._char);
-		break;
-	case 1: // int
-		sourceValue = static_cast<double>(converter._int);
-		break;
-	case 2: // float
-		sourceValue = static_cast<double>(converter._float);
-		if (std::isnan(converter._float))
-			isNan = true;
-		else if (std::isinf(converter._float))
-			infSign = (converter._float > 0) ? 1 : -1;
-		break;
-	case 3: // double
-		sourceValue = converter._double;
-		if (std::isnan(converter._double))
-			isNan = true;
-		else if (std::isinf(converter._double))
-			infSign = (converter._double > 0) ? 1 : -1;
-		break;
-	default:
-		sourceValue = 0.0;
-		break;
-	}
-	
-	// Display all types using helper functions
-	converter.displayChar(sourceValue, isNan, infSign);
-	converter.displayInt(sourceValue, isNan, infSign);
-	converter.displayFloat(sourceValue, isNan, infSign);
-	converter.displayDouble(sourceValue, isNan, infSign);
+    // Identify the type
+    Type type = checktype(input);
+    
+    // Values to be used for display
+    double value = 0.0;
+    bool isNan = false;
+    int infSign = 0;  // 0: not inf, 1: +inf, -1: -inf
+    
+    // Process based on type
+    switch (type) {
+        case CHAR:
+            value = static_cast<double>(input[0]);
+            break;
+        case INT:
+            value = static_cast<double>(std::atoi(input.c_str()));
+            break;
+        case FLOAT:
+        case DOUBLE: {
+            SpecialType specialType = checkSpecialLiteral(input);
+            if (specialType != NOT_SPECIAL) {
+                isNan = (specialType == NAN_VALUE);
+                infSign = (specialType == POS_INF) ? 1 : 
+                          (specialType == NEG_INF) ? -1 : 0;
+            } else {
+                // Remove 'f' suffix if present
+                std::string tmp = input;
+                if (type == FLOAT && tmp.length() > 0 && tmp[tmp.length() - 1] == 'f')
+                    tmp = tmp.substr(0, tmp.length() - 1);
+                
+                value = std::atof(tmp.c_str());
+                // Check for special values from the conversion result
+                if (std::isnan(value))
+                    isNan = true;
+                else if (std::isinf(value))
+                    infSign = (value > 0) ? 1 : -1;
+            }
+            break;
+        }
+        default:
+            // Handle unknown type
+            std::cout << "Error: Unknown type" << std::endl;
+            return;
+    }
+    
+    // Display all conversions
+    displayChar(value, isNan, infSign);
+    displayInt(value, isNan, infSign);
+    displayFloat(value, isNan, infSign);
+    displayDouble(value, isNan, infSign);
 }
