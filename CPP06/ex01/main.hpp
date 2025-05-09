@@ -5,6 +5,8 @@
 #include <string>
 #include <stdint.h>
 
+class Data;
+
 class Data
 {
     public:
@@ -12,13 +14,16 @@ class Data
         ~Data();
         Data(const Data &src);
         Data &operator=(const Data &src);
+        Data(std::string name, int age);
 
         std::string getName() const;
         int getAge() const;
+        Data *getNext() const;
 
     private:
         std::string name;
         int age;
+        Data *next;
 };
 
 class Serializer

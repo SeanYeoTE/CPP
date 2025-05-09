@@ -36,15 +36,6 @@ class ScalarConverter
 	ScalarConverter(const ScalarConverter &ans);
 	ScalarConverter &operator=(const ScalarConverter &ans);
 
-	char getChar(void) const;
-	void setChar(char c);
-	int getInt(void) const;
-	void setInt(int n);
-	float getFloat(void) const;
-	void setFloat(float f);
-	double getDouble(void) const;
-	void setDouble(double d);
-
 	static bool isChar(const std::string &str);
 	static bool isInt(const std::string &str);
 	static bool isFloat(const std::string &str);
