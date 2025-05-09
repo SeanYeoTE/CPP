@@ -1,8 +1,8 @@
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -MMD
-SRCS = main.cpp
+SRCS = main.cpp base.cpp
 OBJS = $(SRCS:.cpp=.o)
-TARGET = ex01
+TARGET = ex02
 
 all: $(TARGET)
 
