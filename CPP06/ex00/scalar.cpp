@@ -1,5 +1,4 @@
 #include "scalar.hpp"
-#include <sstream> // For stringstream
 
 // Constructor
 ScalarConverter::ScalarConverter(void)
@@ -15,6 +14,7 @@ ScalarConverter::~ScalarConverter()
 // Copy Constructor
 ScalarConverter::ScalarConverter(const ScalarConverter &ans)
 {
+    (void)ans;
 }
 
 // Assignment Operator
@@ -47,17 +47,15 @@ ScalarConverter::SpecialType ScalarConverter::checkSpecialLiteral(const std::str
 {
     // Remove 'f' suffix if present for uniform checking
     std::string str = input;
-    
-    if (str.length() > 0 && str[str.length() - 1] == 'f')
+    if (str.length() > 0 && str[str.length() - 1] == 'f' && str[str.length() - 2] == 'f')
     {
         str = str.substr(0, str.length() - 1);
     }
-    
     // Check for NaN
-    if (str == "nan")
+    if (str == "nan" || str == "nanf")
         return NAN_VALUE;
     // Check for positive infinity
-    else if (str == "+inf")
+    else if (str == "+inf" || str == "inf")
         return POS_INF;
     // Check for negative infinity
     else if (str == "-inf")
@@ -68,11 +66,6 @@ ScalarConverter::SpecialType ScalarConverter::checkSpecialLiteral(const std::str
 
 bool ScalarConverter::isFloat(const std::string &str)
 {
-    // Check for special float values using the helper method
-    SpecialType specialType = checkSpecialLiteral(str);
-    if (specialType != NOT_SPECIAL && str.length() > 0 && str[str.length() - 1] == 'f')
-        return true;
-
     size_t dotCount = 0;
     bool hasF = false;
 
@@ -80,10 +73,10 @@ bool ScalarConverter::isFloat(const std::string &str)
     if (str.length() > 0 && str[str.length() - 1] == 'f')
     {
         hasF = true;
-        str = str.substr(0, str.length() - 1); // Remove 'f' for further checking
+        // str = str.substr(0, str.length() - 1); // Remove 'f' for further checking
     }
 
-    for (size_t i = 0; i < str.length(); i++)
+    for (size_t i = 0; i < str.length() - 1; i++)
     {
         if (str[i] == '.')
         {
@@ -99,11 +92,6 @@ bool ScalarConverter::isFloat(const std::string &str)
 
 bool ScalarConverter::isDouble(const std::string &str)
 {
-    // Check for special double values using the helper method
-    SpecialType specialType = checkSpecialLiteral(str);
-    if (specialType != NOT_SPECIAL && (str.length() == 0 || str[str.length() - 1] != 'f'))
-        return true;
-
     size_t dotCount = 0;
     for (size_t i = 0; i < str.length(); i++)
     {
@@ -132,116 +120,17 @@ ScalarConverter::Type ScalarConverter::checktype(const std::string &input)
         else
             return DOUBLE; // Double
     }
-    else if (isChar(input))
-        return CHAR;
     else if (isInt(input))
         return INT;
     else if (isFloat(input))
         return FLOAT;
     else if (isDouble(input))
         return DOUBLE;
+    else if (isChar(input))
+        return CHAR;
     else
-        return DOUBLE; // Default to double for unrecognized inputs
+        return UNKNOWN;
 }
-
-// void ScalarConverter::firstconvert(const std::string &input)
-// {
-// 	int	_type;
-
-// 	_type = this->_type;
-// 	switch (_type)
-// 	{
-// 	case 0:
-// 		convertChar(input);
-// 		break ;
-// 	case 1:
-// 		convertInt(input);
-// 		break ;
-// 	case 2:
-// 		convertFloat(input);
-// 		break ;
-// 	case 3:
-// 		convertDouble(input);
-// 		break ;
-// 	default:
-// 		throw std::invalid_argument("Invalid type");
-// 		break ;
-// 	}
-// }
-
-// void ScalarConverter::convertChar(const std::string &input)
-// {
-// 	this->_char = input[0];
-// }
-
-// void ScalarConverter::convertInt(const std::string &input)
-// {
-// 	// Convert to int directly without try-catch
-// 	this->_int = std::atoi(input.c_str());
-// }
-
-// void ScalarConverter::convertFloat(const std::string &input)
-// {
-//     // Check if it's a special literal
-//     SpecialType specialType = checkSpecialLiteral(input);
-    
-//     if (specialType != NOT_SPECIAL)
-//     {
-//         // Handle special values
-//         switch (specialType)
-//         {
-//             case NAN_VALUE:
-//                 this->_float = std::numeric_limits<float>::quiet_NaN();
-//                 break;
-//             case POS_INF:
-//                 this->_float = std::numeric_limits<float>::infinity();
-//                 break;
-//             case NEG_INF:
-//                 this->_float = -std::numeric_limits<float>::infinity();
-//                 break;
-//             default:
-//                 break;
-//         }
-//         return;
-//     }
-
-//     // Regular float conversion
-//     // Remove 'f' suffix if present for conversion
-//     std::string tmp = input;
-//     if (tmp.length() > 0 && tmp[tmp.length() - 1] == 'f')
-//         tmp = tmp.substr(0, tmp.length() - 1);
-        
-//     this->_float = std::atof(tmp.c_str());
-// }
-
-// void ScalarConverter::convertDouble(const std::string &input)
-// {
-//     // Check if it's a special literal
-//     SpecialType specialType = checkSpecialLiteral(input);
-    
-//     if (specialType != NOT_SPECIAL)
-//     {
-//         // Handle special values
-//         switch (specialType)
-//         {
-//             case NAN_VALUE:
-//                 this->_double = std::numeric_limits<double>::quiet_NaN();
-//                 break;
-//             case POS_INF:
-//                 this->_double = std::numeric_limits<double>::infinity();
-//                 break;
-//             case NEG_INF:
-//                 this->_double = -std::numeric_limits<double>::infinity();
-//                 break;
-//             default:
-//                 break;
-//         }
-//         return;
-//     }
-
-//     // Regular double conversion
-//     this->_double = std::atof(input.c_str());
-// }
 
 // Helper function to display char value
 void ScalarConverter::displayChar(double sourceValue, bool isNan, int infSign)
@@ -294,7 +183,7 @@ void ScalarConverter::displayFloat(double sourceValue, bool isNan, int infSign)
 	else
 	{
 		float floatValue = static_cast<float>(sourceValue);
-		std::cout << floatValue << "f";
+		std::cout << std::fixed << std::setprecision(1) << floatValue << "f";
 	}
 	std::cout << std::endl;
 }
@@ -348,7 +237,8 @@ void ScalarConverter::convert(const std::string& input)
                 if (type == FLOAT && tmp.length() > 0 && tmp[tmp.length() - 1] == 'f')
                     tmp = tmp.substr(0, tmp.length() - 1);
                 
-                value = std::atof(tmp.c_str());
+                std::stringstream ss(tmp);
+                ss >> value;
                 // Check for special values from the conversion result
                 if (std::isnan(value))
                     isNan = true;
@@ -362,7 +252,6 @@ void ScalarConverter::convert(const std::string& input)
             std::cout << "Error: Unknown type" << std::endl;
             return;
     }
-    
     // Display all conversions
     displayChar(value, isNan, infSign);
     displayInt(value, isNan, infSign);
