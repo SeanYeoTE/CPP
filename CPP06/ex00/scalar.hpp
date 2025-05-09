@@ -53,11 +53,6 @@ class ScalarConverter
 	// Helper method to check for special literals
 	static SpecialType checkSpecialLiteral(const std::string &input);
 	static Type checktype(const std::string &input);
-	// void firstconvert(const std::string &input);
-	// void convertChar(const std::string &input);
-	// void convertInt(const std::string &input);
-	// void convertFloat(const std::string &input);
-	// void convertDouble(const std::string &input);
 
 	// Helper functions for displaying scalar types
 	static void displayChar(double sourceValue, bool isNan, int infSign);
@@ -67,7 +62,6 @@ class ScalarConverter
 
   public:
 	static void convert(const std::string &input);
-	static void display(void);
 };
 
 #endif

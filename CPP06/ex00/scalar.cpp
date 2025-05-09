@@ -73,9 +73,7 @@ bool ScalarConverter::isFloat(const std::string &str)
     if (str.length() > 0 && str[str.length() - 1] == 'f')
     {
         hasF = true;
-        // str = str.substr(0, str.length() - 1); // Remove 'f' for further checking
     }
-
     for (size_t i = 0; i < str.length() - 1; i++)
     {
         if (str[i] == '.')
