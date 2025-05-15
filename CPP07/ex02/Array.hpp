@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <cstdlib>
+#include <ctime>
 
 template <class T>
 class Array
