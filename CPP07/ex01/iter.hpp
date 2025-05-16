@@ -13,11 +13,6 @@ void iter(T *array, int length, void (*func)(const T &))
     }
 }
 
-template <typename T>
-void printElement(const T &element)
-{
-    std::cout << element << std::endl;
-}
 
 template <typename T>
 void iter(T *array, int length, void (*func)(T &))
@@ -29,10 +24,9 @@ void iter(T *array, int length, void (*func)(T &))
 }
 
 template <typename T>
-void printElement(T &element)
+void printElement(const T &element)
 {
     std::cout << element << std::endl;
 }
-
 
 #endif
