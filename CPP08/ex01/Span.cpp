@@ -27,14 +27,18 @@ int Span::shortestSpan() {
         throw std::runtime_error("MIN 2 numbers");
     }
     std::multiset<int>::iterator it = _numbers.begin();
+    std::multiset<int>::iterator nextIt = it;
+    ++nextIt;
     int minSpan = INT_MAX;
-    std::multiset<int>::iterator placeholder = it ++;
-    for (std::multiset<int>::iterator nextIt = placeholder; nextIt != _numbers.end(); ++it, ++nextIt) {
+    
+    while (nextIt != _numbers.end()) {
         int span = *nextIt - *it;
         std::cout << "Span between " << *it << " and " << *nextIt << " is " << span << std::endl;
         if (span < minSpan) {
             minSpan = span;
         }
+        ++it;
+        ++nextIt;
     }
     return minSpan;
 }
