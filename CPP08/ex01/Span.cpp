@@ -33,7 +33,7 @@ int Span::shortestSpan() {
     
     while (nextIt != _numbers.end()) {
         int span = *nextIt - *it;
-        std::cout << "Span between " << *it << " and " << *nextIt << " is " << span << std::endl;
+        // std::cout << "Span between " << *it << " and " << *nextIt << " is " << span << std::endl;
         if (span < minSpan) {
             minSpan = span;
         }
