@@ -1,0 +1,508 @@
+FORD-JOHNSON ALGORITHM IMPLEMENTATION PLAN (C++98 COMPLIANT)
+==============================================================
+
+Project: CPP09 Exercise 02 - PmergeMe
+Date: July 5, 2025
+Algorithm: Ford-Johnson (Merge-Insertion Sort)
+Standard: C++98 Compliant
+
+OVERVIEW
+--------
+The Ford-Johnson algorithm is an optimal comparison-based sorting algorithm that minimizes
+the number of comparisons needed. It works by pairing elements, recursively sorting pairs,
+and then inserting remaining elements using the Jacobsthal sequence for optimal insertion order.
+
+C++98 COMPLIANCE NOTES:
+- No lambda functions (use function objects)
+- No range-based for loops (use iterators)
+- No auto keyword (explicit type declarations)
+- No C++11 features
+- Careful with template syntax (space in "> >")
+- Consistent integer types to avoid warnings
+
+CURRENT CODE ANALYSIS
+---------------------
+- Basic template class structure exists
+- Input processing and validation implemented
+- Basic pairing function started but incomplete
+- Missing core Ford-Johnson algorithm implementation
+- Missing timing functionality
+- Display shows same data for "Before" and "After"
+
+PHASE 1: UPDATE CLASS STRUCTURE
+-------------------------------
+
+1.1 Update PmergeMe.hpp - Add Private Methods:
+   - void fordJohnsonSort()                    // Main sorting entry point
+   - void createPairs()                        // Create and order pairs
+   - void recursiveSort(std::vector<std::pair<int, int> >& pairs)  // Recursive sort pairs
+   - void insertRemainingElements(const std::vector<int>& remaining)  // Insert smaller elements
+   - int binarySearch(int value, int left, int right)  // Find insertion position
+   - std::vector<int> generateJacobsthalSequence(int n)  // Generate Jacobsthal numbers
+   - std::vector<int> extractSmallerElements() const   // Extract smaller elements from pairs
+   - void insertElement(int element)           // Insert single element
+
+1.2 Update PmergeMe.hpp - Add Public Method:
+   - void sort()                               // Public interface to start sorting
+
+1.3 Update PmergeMe.hpp - Add Member Variables:
+   - T _original                               // Store original data for "Before" display
+   - bool _hasOddElement                       // Track if there's an unpaired element
+   - int _oddElement                           // Store the unpaired element (NOT _oddElements)
+   - std::vector<std::pair<int, int> > _pairs  // Store pairs for sorting (note space in "> >")
+
+1.4 Add Helper Structs (for C++98 compliance):
+   - struct ComparePairsBySecond              // Function object for pair sorting
+
+PHASE 2: ALGORITHM CORE IMPLEMENTATION
+-------------------------------------
+
+2.1 Main Sorting Method (fordJohnsonSort):
+   ```cpp
+   template <typename T>
+   void PmergeMe<T>::fordJohnsonSort() {
+       // Store original data
+       _original = _data;
+       
+       // Handle edge cases
+       if (_data.size() <= 1) return;
+       
+       // Start timing
+       clock_t start = clock();
+       
+       // Execute Ford-Johnson steps
+       createPairs();
+       if (!_pairs.empty()) {
+           recursiveSort(_pairs);
+           std::vector<int> smaller = extractSmallerElements();
+           insertRemainingElements(smaller);
+       }
+       
+       // Handle odd element if exists
+       if (_hasOddElement) {
+           insertElement(_oddElement);
+       }
+       
+       // Calculate timing
+       clock_t end = clock();
+       _time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000000; // microseconds
+   }
+   ```
+
+2.2 Helper Struct for C++98 Compliance:
+   ```cpp
+   // Add this as a private member or friend struct
+   struct ComparePairsBySecond {
+       bool operator()(const std::pair<int, int>& a, const std::pair<int, int>& b) const {
+           return a.second < b.second;
+       }
+   };
+   ```
+
+2.3 Pairing Phase (createPairs):
+   ```cpp
+   template <typename T>
+   void PmergeMe<T>::createPairs() {
+       _pairs.clear();
+       _hasOddElement = false;
+       
+       // Process pairs
+       for (size_t i = 0; i < _data.size(); i += 2) {
+           if (i + 1 < _data.size()) {
+               int first = _data[i];
+               int second = _data[i + 1];
+               // Store as (smaller, larger)
+               if (first <= second) {
+                   _pairs.push_back(std::make_pair(first, second));
+               } else {
+                   _pairs.push_back(std::make_pair(second, first));
+               }
+           } else {
+               // Odd element
+               _hasOddElement = true;
+               _oddElement = _data[i];
+           }
+       }
+   }
+   ```
+
+2.4 Recursive Sorting (recursiveSort) - C++98 Compliant:
+   ```cpp
+   template <typename T>
+   void PmergeMe<T>::recursiveSort(std::vector<std::pair<int, int> >& pairs) {
+       if (pairs.size() <= 1) return;
+       
+       // Sort pairs by their larger elements (second element) - C++98 style
+       std::sort(pairs.begin(), pairs.end(), ComparePairsBySecond());
+   }
+   ```
+
+2.5 Extract Smaller Elements:
+   ```cpp
+   template <typename T>
+   std::vector<int> PmergeMe<T>::extractSmallerElements() const {
+       std::vector<int> smaller;
+       // C++98 compliant iteration
+       for (std::vector<std::pair<int, int> >::const_iterator it = _pairs.begin(); 
+            it != _pairs.end(); ++it) {
+           smaller.push_back(it->first);
+       }
+       return smaller;
+   }
+   ```
+
+2.6 Insertion Phase (insertRemainingElements) - C++98 Compliant:
+   ```cpp
+   template <typename T>
+   void PmergeMe<T>::insertRemainingElements(const std::vector<int>& remaining) {
+       // Create main chain from larger elements
+       _data.clear();
+       for (std::vector<std::pair<int, int> >::const_iterator it = _pairs.begin(); 
+            it != _pairs.end(); ++it) {
+           _data.push_back(it->second);
+       }
+       
+       // Generate Jacobsthal sequence for optimal insertion order
+       std::vector<int> jacobsthal = generateJacobsthalSequence(static_cast<int>(remaining.size()));
+       
+       // Insert elements according to Jacobsthal sequence - C++98 style
+       for (std::vector<int>::const_iterator it = jacobsthal.begin(); 
+            it != jacobsthal.end(); ++it) {
+           int index = *it;
+           if (index >= 0 && index < static_cast<int>(remaining.size())) {
+               int value = remaining[index];
+               int pos = binarySearch(value, 0, static_cast<int>(_data.size()) - 1);
+               _data.insert(_data.begin() + pos, value);
+           }
+       }
+   }
+   ```
+
+PHASE 3: HELPER FUNCTIONS
+------------------------
+
+3.1 Binary Search (binarySearch) - C++98 Compliant:
+   ```cpp
+   template <typename T>
+   int PmergeMe<T>::binarySearch(int value, int left, int right) {
+       while (left <= right) {
+           int mid = left + (right - left) / 2;
+           if (static_cast<int>(_data[mid]) < value) {
+               left = mid + 1;
+           } else {
+               right = mid - 1;
+           }
+       }
+       return left;
+   }
+   ```
+
+3.2 Jacobsthal Sequence (generateJacobsthalSequence) - C++98 Compliant:
+   ```cpp
+   template <typename T>
+   std::vector<int> PmergeMe<T>::generateJacobsthalSequence(int n) {
+       std::vector<int> jacobsthal;
+       if (n <= 0) return jacobsthal;
+       
+       // Generate Jacobsthal numbers: J(0)=0, J(1)=1, J(n)=J(n-1)+2*J(n-2)
+       std::vector<int> j;
+       j.push_back(0);
+       if (n > 0) j.push_back(1);
+       
+       for (int i = 2; j[i-1] < n; ++i) {
+           int next = j[i-1] + 2 * j[i-2];
+           if (next >= n) break;
+           j.push_back(next);
+       }
+       
+       // Create insertion order based on Jacobsthal sequence
+       std::vector<bool> used(n, false);
+       for (size_t i = 1; i < j.size(); ++i) {
+           for (int idx = j[i] - 1; idx >= j[i-1]; --idx) {
+               if (idx < n && !used[idx]) {
+                   jacobsthal.push_back(idx);
+                   used[idx] = true;
+               }
+           }
+       }
+       
+       // Add remaining indices
+       for (int i = 0; i < n; ++i) {
+           if (!used[i]) {
+               jacobsthal.push_back(i);
+           }
+       }
+       
+       return jacobsthal;
+   }
+   ```
+
+3.3 Insert Single Element - C++98 Compliant:
+   ```cpp
+   template <typename T>
+   void PmergeMe<T>::insertElement(int element) {
+       if (_data.empty()) {
+           _data.push_back(element);
+           return;
+       }
+       
+       int pos = binarySearch(element, 0, static_cast<int>(_data.size()) - 1);
+       _data.insert(_data.begin() + pos, element);
+   }
+   ```
+
+PHASE 4: INTEGRATION AND UPDATES
+--------------------------------
+
+4.1 Update processInput - C++98 Compliant:
+   ```cpp
+   template <typename T>
+   void PmergeMe<T>::processInput(int argc, char **argv) {
+       // Clear any existing data
+       _data.clear();
+       
+       // Process and validate input
+       for (int i = 1; i < argc; ++i) {
+           char* endptr;
+           long num = std::strtol(argv[i], &endptr, 10);
+           
+           // Check for conversion errors
+           if (*endptr != '\0' || num < 0 || num > INT_MAX) {
+               throw std::invalid_argument("Invalid input: negative numbers or non-integers not allowed.");
+           }
+           
+           _data.push_back(static_cast<int>(num));
+       }
+       
+       if (_data.empty()) {
+           throw std::invalid_argument("No valid numbers provided.");
+       }
+       
+       // Call sorting after input processing
+       fordJohnsonSort();
+   }
+   ```
+
+4.2 Update displayResults - C++98 Compliant:
+   ```cpp
+   template <typename T>
+   void PmergeMe<T>::displayResults() const {
+       std::cout << "Before:";
+       for (size_t i = 0; i < _original.size(); ++i) {
+           std::cout << " " << _original[i];
+       }
+       std::cout << "\nAfter: ";
+       for (size_t i = 0; i < _data.size(); ++i) {
+           std::cout << " " << _data[i];
+       }
+       std::cout << std::endl;
+       std::cout << "Time to process a range of " << _data.size() 
+                 << " elements with std::" << getContainerType() 
+                 << " : " << _time << " us" << std::endl;
+   }
+   ```
+
+4.3 Add Container Type Helper - C++98 Compliant:
+   ```cpp
+   template <typename T>
+   std::string PmergeMe<T>::getContainerType() const {
+       return "unknown";
+   }
+   
+   // Template specializations (add in .cpp file after template class definitions)
+   template <>
+   std::string PmergeMe<std::vector<int> >::getContainerType() const {
+       return "vector";
+   }
+   
+   template <>
+   std::string PmergeMe<std::deque<int> >::getContainerType() const {
+       return "deque";
+   }
+   ```
+
+PHASE 5: MAIN.CPP UPDATES
+-------------------------
+
+5.1 Update main.cpp for Performance Comparison - C++98 Compliant:
+   ```cpp
+   #include "PmergeMe.hpp"
+   #include <iostream>
+   #include <exception>
+
+   int main(int argc, char **argv) {
+       if (argc < 2) {
+           std::cerr << "Usage: " << argv[0] << " <positive integers>" << std::endl;
+           return 1;
+       }
+
+       try {
+           // Test with vector
+           PmergeMe<std::vector<int> > vectorSort;
+           vectorSort.processInput(argc, argv);
+           vectorSort.displayResults();
+           
+           // Test with deque
+           PmergeMe<std::deque<int> > dequeSort;
+           dequeSort.processInput(argc, argv);
+           dequeSort.displayResults();
+           
+       } catch (const std::exception &e) {
+           std::cerr << "Error: " << e.what() << std::endl;
+           return 1;
+       }
+
+       return 0;
+   }
+   ```
+
+PHASE 6: C++98 COMPLIANCE & ALGORITHM EXPLANATION
+-------------------------------------------------
+
+C++98 COMPLIANCE CHECKLIST:
+✓ NO lambda functions (use function objects instead)
+✓ NO range-based for loops (use iterator-based loops)
+✓ NO auto keyword (use explicit type declarations)
+✓ Template syntax: std::vector<std::pair<int, int> > (space between "> >")
+✓ Use size_t consistently for loop indices
+✓ Use static_cast for explicit type conversions
+✓ Use std::strtol instead of std::atoi for better error checking
+✓ Include proper headers: <cstdlib> for std::strtol, <climits> for INT_MAX
+✓ Use const_iterator for read-only iterations
+✓ Function objects for custom comparisons
+✓ Explicit template instantiations at end of .cpp file
+
+Ford-Johnson Algorithm Steps (C++98 Implementation):
+1. **Pair Creation**: Group consecutive elements into pairs, order each pair (smaller, larger)
+2. **Recursive Sort**: Sort pairs by their larger elements using function object
+3. **Main Chain**: Create initial sorted sequence from larger elements  
+4. **Extract Smaller**: Get smaller elements from pairs for insertion
+5. **Jacobsthal Insertion**: Insert smaller elements using Jacobsthal sequence order
+6. **Binary Search**: Find optimal insertion positions to minimize comparisons
+7. **Handle Odd Element**: Insert any remaining unpaired element
+
+Key C++98 Features Used:
+- **Function Objects**: Custom comparison for std::sort
+- **Iterator-based loops**: for (it = container.begin(); it != container.end(); ++it)
+- **Template Specialization**: Different behavior for vector vs deque
+- **Explicit Type Declarations**: No auto keyword usage
+- **STL Algorithms**: std::sort with custom predicate
+
+TESTING STRATEGY (C++98)
+------------------------
+
+Compilation Test:
+```bash
+g++ -Wall -Wextra -Werror -std=c++98 -pedantic -O2 *.cpp -o PmergeMe
+```
+
+Test Cases:
+1. Empty input: ./PmergeMe (should show usage)
+2. Single element: ./PmergeMe 42
+3. Two elements: ./PmergeMe 2 1
+4. Small sequences: ./PmergeMe 3 5 9 7 4
+5. Larger sequences: ./PmergeMe 41 67 34 0 69 24 78 58 62 64 5 45 81 27 61
+6. Already sorted: ./PmergeMe 1 2 3 4 5
+7. Reverse sorted: ./PmergeMe 5 4 3 2 1
+8. Duplicates: ./PmergeMe 1 1 2 2 3 3
+9. Large numbers: ./PmergeMe 2147483647 1000000 500000
+10. Error cases: ./PmergeMe -1 (should error), ./PmergeMe abc (should error)
+
+Expected Output Format (C++98):
+```
+Before: 3 5 9 7 4
+After:  3 4 5 7 9
+Time to process a range of 5 elements with std::vector : 42 us
+Before: 3 5 9 7 4
+After:  3 4 5 7 9
+Time to process a range of 5 elements with std::deque : 38 us
+```
+
+IMPLEMENTATION ORDER (C++98)
+----------------------------
+
+1. Update header file with new method declarations and C++98 template syntax
+2. Add ComparePairsBySecond function object for std::sort
+3. Implement helper functions (Jacobsthal, binary search) with iterator loops
+4. Implement core algorithm methods using C++98 features
+5. Update existing methods (processInput with std::strtol, displayResults)
+6. Add template specializations for getContainerType
+7. Test compilation with -std=c++98 -pedantic flags
+8. Test with small examples and verify output format
+9. Add timing and performance comparison between containers
+10. Test with larger datasets and edge cases
+11. Final optimization and code review
+
+HEADER FILE UPDATES NEEDED (C++98)
+----------------------------------
+
+```cpp
+#ifndef PMERGEME_HPP
+#define PMERGEME_HPP
+
+#include <iostream>
+#include <vector>
+#include <deque>
+#include <algorithm>
+#include <ctime>
+#include <string>
+#include <cstdlib>
+#include <climits>
+
+template <typename T>
+class PmergeMe {
+    private:
+        // Helper struct for C++98 compliance
+        struct ComparePairsBySecond {
+            bool operator()(const std::pair<int, int>& a, const std::pair<int, int>& b) const {
+                return a.second < b.second;
+            }
+        };
+
+    public:
+        PmergeMe();
+        ~PmergeMe();
+        PmergeMe(const PmergeMe &other);
+        PmergeMe &operator=(const PmergeMe &other);
+
+        void processInput(int argc, char **argv);
+        void displayResults() const;
+        std::string getContainerType() const;
+
+    private:
+        // Data members
+        T _data;
+        T _original;
+        double _time;
+        bool _hasOddElement;
+        int _oddElement;
+        std::vector<std::pair<int, int> > _pairs;  // Note: space in "> >"
+
+        // Algorithm methods
+        void fordJohnsonSort();
+        void createPairs();
+        void recursiveSort(std::vector<std::pair<int, int> >& pairs);
+        void insertRemainingElements(const std::vector<int>& remaining);
+        std::vector<int> extractSmallerElements() const;
+        void insertElement(int element);
+        int binarySearch(int value, int left, int right) const;
+        std::vector<int> generateJacobsthalSequence(int n) const;
+};
+
+#endif
+```
+
+NOTES (C++98 SPECIFIC)
+---------------------
+- Ford-Johnson is optimal for small sequences (up to ~20 elements)
+- C++98 compliance requires careful attention to syntax and STL usage
+- Template syntax requires space between "> >" in nested templates
+- Function objects replace lambda expressions for custom comparisons
+- Iterator-based loops replace range-based for loops
+- std::strtol provides better error checking than std::atoi
+- Template specializations must be properly declared and defined
+- Timing comparison shows practical performance differences between containers
+- Algorithm complexity demonstrates advanced C++98 template programming
+
+END OF C++98 COMPLIANT PLAN
+---------------------------
