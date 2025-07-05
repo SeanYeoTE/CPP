@@ -116,3 +116,69 @@ void PmergeMe<T>::recursiveSort(std::vector<std::pair<int, int>> &pairs) {
     
     std::sort(pairs.begin(), pairs.end(), ComparePairsBySecond());
 }
+
+
+template <typename T>
+std::vector<int> PmergeMe<T>::extractSmallerElements() const {
+    std::vector <int> smaller;
+
+    for (std::vector<std::pair<int, int> >::const_iterator it = _pairs.begin();
+         it != _pairs.end(); ++it) {
+        smaller.push_back(it->first);
+    }
+    return smaller;
+}
+
+template <typename T>
+void PmergeMe<T>::insertRemainingElements(const std::vector<int> &smaller) {
+    _data.clear();
+    for (std::vector<std::pair<int, int> >::const_iterator it = _pairs.begin();
+         it != _pairs.end(); ++it) {
+        _data.push_back(it->second);
+    }
+
+    std::vector<int> jacobsthal = generateJacobsthalSequence(smaller.size());
+
+    for (std::vector<int>::const_iterator it = jacobsthal.begin();
+         it != jacobsthal.end(); ++it) {
+        int index = *it;
+        if (index >= 0 && index < static_cast<int>(smaller.size())) {
+            int value = smaller[index];
+            int pos = binarySearch(value, 0, static_cast<int>(_data.size()) - 1);
+            _data.insert(_data.begin() + pos, value);
+        }
+    }
+}
+
+
+template <typename T>
+int PmergeMe<T>::binarySearch(int value, int left, int right) {
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (_data[mid] < value)
+            left = mid + 1;
+        else
+            right = mid - 1;
+    }
+    return left; // Return the position where the value should be inserted
+}
+
+
+template <typename T>
+std::vector<int> PmergeMe<T>::generateJacobsthalSequence(int n) {
+    std::vector<int> jacobsthal;
+    if (n <= 0)
+        return jacobsthal;
+    
+    std::vector<int> j;
+    j.push_back(0);
+    if (n > 0)
+        j.push_back(1);
+    for (int i = 2; j[i - 1] < n; ++i) {
+        int next = j[i - 1] + 2 * j[i - 2];
+        if (next >= n)
+            break;
+        j.push_back(next);
+    }
+
+    
