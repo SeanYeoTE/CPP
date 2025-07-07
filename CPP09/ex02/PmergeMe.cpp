@@ -1,5 +1,5 @@
 #include "PmergeMe.hpp"
-#include <cstdlib>
+
 
 template <typename T>
 PmergeMe<T>::PmergeMe() : _data(), _last(-1), _time(0) {}
@@ -26,38 +26,43 @@ PmergeMe<T> &PmergeMe<T>::operator=(const PmergeMe &other) {
 
 template <typename T>
 void PmergeMe<T>::processInput(int argc, char **argv) {
-    for (int i = 1; i < argc; ++i) {
-        int num = std::atoi(argv[i]);
-        if (num < 0) {
-            throw std::invalid_argument("Negative numbers are not allowed.");
-        }
-        _data.push_back(num);
-    }
-    if (_data.empty()) {
-        throw std::invalid_argument("No valid numbers provided.");
-    }
-    _last = _data.back();
-}
+    _data.clear();
 
-template <typename T>
-void PmergeMe<T>::displayResults() const {
-    std::cout << "Before:";
-    for (long unsigned int i = 0; i < _data.size(); ++i) {
-        std::cout << " ";
-        std::cout << _data[i];
+    for (int i = 1; i < argc; ++i) {    
+        char *endptr;
+        long value = std::strtol(argv[i], &endptr, 10);
+        if (*endptr != '\0' || value < 0 || value > INT_MAX) {
+            throw std::invalid_argument("Invalid input: " + std::string(argv[i]));
+        }
+        _data.push_back(static_cast<int>(value));
     }
-    std::cout << "\nAfter: ";
-    for (long unsigned int i = 0; i < _data.size(); ++i) {
-        std::cout << " ";
-        std::cout << _data[i];
+
+    if (_data.empty()) {
+        throw std::invalid_argument("No valid input provided.");
     }
-    std::cout << std::endl;
+
+    fordJohnsonSort();
 }
 
 // Explicit template instantiation for the types you need
 template class PmergeMe<std::vector<int> >;
 template class PmergeMe<std::deque<int> >;
 
+template <typename T>
+std::string PmergeMe<T>::getContainerType() const {
+    return "unknown";
+}
+
+// Template specializations (add in .cpp file after template class definitions)
+template <>
+std::string PmergeMe<std::vector<int> >::getContainerType() const {
+    return "vector";
+}
+
+template <>
+std::string PmergeMe<std::deque<int> >::getContainerType() const {
+       return "deque";
+}
 
 template <typename T>
 void PmergeMe<T>::fordJohnsonSort() {
@@ -74,12 +79,13 @@ void PmergeMe<T>::fordJohnsonSort() {
     }
 
     if (_hasOddElement) {
-        insertElement(_oddElements)
+        insertElement(_oddElement);
     };
 
     clock_t end = clock();
     _time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000000;
 }
+
 
 template <typename T>
 void PmergeMe<T>::pairing() {
@@ -103,20 +109,57 @@ void PmergeMe<T>::pairing() {
 }
 
 template <typename T>
-bool PmergeMe<T>::ComparePairsBySecond::operator()(const std::pair<int, int>& a, const std::pair<int, int>& b) const
-{
-    return a.second < b.second;
+void PmergeMe<T>::recursiveSort(std::vector<std::pair<int, int> > &pairs) {
+    if (pairs.size() <= 1)
+        return;
+    // Recursive Ford-Johnson approach: divide into sub-sequences
+    size_t mid = pairs.size() / 2;
+    
+    // Create left and right sub-sequences
+    std::vector<std::pair<int, int> > left(pairs.begin(), pairs.begin() + mid);
+    std::vector<std::pair<int, int> > right(pairs.begin() + mid, pairs.end());
+    
+    // Recursively sort both halves
+    recursiveSort(left);
+    recursiveSort(right);
+    
+    // Merge the sorted halves using Ford-Johnson merge strategy
+    mergeSequences(pairs, left, right);
 }
 
 
 template <typename T>
-void PmergeMe<T>::recursiveSort(std::vector<std::pair<int, int>> &pairs) {
-    if (pairs.size() <= 1)
-        return;
+void PmergeMe<T>::mergeSequences(std::vector<std::pair<int, int> > &result,
+                                const std::vector<std::pair<int, int> > &left,
+                                const std::vector<std::pair<int, int> > &right) {
+    size_t leftIdx = 0, rightIdx = 0, resultIdx = 0;
     
-    std::sort(pairs.begin(), pairs.end(), ComparePairsBySecond());
+    // Merge the two sorted sequences by comparing the larger elements (second values)
+    while (leftIdx < left.size() && rightIdx < right.size()) {
+        if (left[leftIdx].second <= right[rightIdx].second) {
+            result[resultIdx] = left[leftIdx];
+            leftIdx++;
+        } else {
+            result[resultIdx] = right[rightIdx];
+            rightIdx++;
+        }
+        resultIdx++;
+    }
+    
+    // Copy remaining elements from left sequence
+    while (leftIdx < left.size()) {
+        result[resultIdx] = left[leftIdx];
+        leftIdx++;
+        resultIdx++;
+    }
+    
+    // Copy remaining elements from right sequence
+    while (rightIdx < right.size()) {
+        result[resultIdx] = right[rightIdx];
+        rightIdx++;
+        resultIdx++;
+    }
 }
-
 
 template <typename T>
 std::vector<int> PmergeMe<T>::extractSmallerElements() const {
@@ -151,34 +194,7 @@ void PmergeMe<T>::insertRemainingElements(const std::vector<int> &smaller) {
 }
 
 
-template <typename T>
-int PmergeMe<T>::binarySearch(int value, int left, int right) {
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        if (_data[mid] < value)
-            left = mid + 1;
-        else
-            right = mid - 1;
-    }
-    return left; // Return the position where the value should be inserted
-}
 
 
-template <typename T>
-std::vector<int> PmergeMe<T>::generateJacobsthalSequence(int n) {
-    std::vector<int> jacobsthal;
-    if (n <= 0)
-        return jacobsthal;
-    
-    std::vector<int> j;
-    j.push_back(0);
-    if (n > 0)
-        j.push_back(1);
-    for (int i = 2; j[i - 1] < n; ++i) {
-        int next = j[i - 1] + 2 * j[i - 2];
-        if (next >= n)
-            break;
-        j.push_back(next);
-    }
 
-    
+
