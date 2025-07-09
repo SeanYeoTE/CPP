@@ -1,3 +1,3 @@
 # CPP
 
-CPP Exercises from 42
+CPP Exercises
