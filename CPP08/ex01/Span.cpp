@@ -16,9 +16,9 @@ Span &Span::operator=(Span const &rhs) {
     return *this;
 }
 
-void Span::addnumber(int number) {
+void Span::addNumber(int number) {
     checkCapacity();
-    _numbers.insert(number);
+    _numbers.push_back(number);
 }
 
 int Span::shortestSpan() {
@@ -26,29 +26,27 @@ int Span::shortestSpan() {
     if (_numbers.size() < 2) {
         throw std::runtime_error("MIN 2 numbers");
     }
-    std::multiset<int>::iterator it = _numbers.begin();
-    std::multiset<int>::iterator nextIt = it;
-    ++nextIt;
-    int minSpan = INT_MAX;
-    
-    while (nextIt != _numbers.end()) {
-        int span = *nextIt - *it;
-        // std::cout << "Span between " << *it << " and " << *nextIt << " is " << span << std::endl;
+    std::vector<int> tmp(_numbers.begin(), _numbers.end());
+    std::sort(tmp.begin(), tmp.end());
+    int minSpan = tmp[1] - tmp[0];
+    for (unsigned int i = 1; i < tmp.size(); ++i) {
+        int span = tmp[i] - tmp[i - 1];
         if (span < minSpan) {
             minSpan = span;
         }
-        ++it;
-        ++nextIt;
     }
     return minSpan;
 }
 
 int Span::longestSpan() {
     checkEmpty();
-    if (_numbers.size() < 2) {
+    std::vector<int> tmp(_numbers.begin(), _numbers.end());
+    std::sort(tmp.begin(), tmp.end());
+
+    if (tmp.size() < 2) {
         throw std::runtime_error("MIN 2 numbers");
     }
-    return *(_numbers.rbegin()) - *(_numbers.begin());
+    return *(tmp.rbegin()) - *(tmp.begin());
 }
 
 void Span::checkCapacity() const {
@@ -61,4 +59,12 @@ void Span::checkEmpty() const {
     if (_numbers.empty()) {
         throw std::runtime_error("Span is empty, cannot compute spans");
     }
+}
+
+void Span::addRange(std::vector<int>::iterator start, std::vector<int>::iterator end) {
+   unsigned int rangeSize = std::distance(start, end);
+   if (rangeSize + _numbers.size() > _n) {
+       throw std::runtime_error("Adding this range would exceed capacity");
+   }
+    _numbers.insert(_numbers.end(), start, end);
 }

@@ -6,7 +6,7 @@
 #include <climits>
 #include <set>
 #include <iterator>
-
+#include <vector>
 class Span
 {
     public:
@@ -15,13 +15,14 @@ class Span
         Span(Span const &other);
         Span &operator= (Span const &rhs);
 
-        void addnumber(int number);
+        void addNumber(int number);
         int shortestSpan();
         int longestSpan();
+        void addRange(std::vector<int>::iterator start, std::vector<int>::iterator end);
 
     private:
         unsigned int _n;
-        std::multiset<int> _numbers;
+        std::vector<int> _numbers;
 
         Span();
         void checkCapacity() const; // Check if we can add more numbers

@@ -6,11 +6,11 @@ int main() {
     try {
         std::cout << "=== Basic Test (Original) ===" << std::endl;
         Span sp = Span(5);
-        sp.addnumber(6);
-        sp.addnumber(3);
-        sp.addnumber(17);
-        sp.addnumber(9);
-        sp.addnumber(11);
+        sp.addNumber(6);
+        sp.addNumber(3);
+        sp.addNumber(17);
+        sp.addNumber(9);
+        sp.addNumber(11);
 
         std::cout << "Shortest span: " << sp.shortestSpan() << std::endl;
         std::cout << "Longest span: " << sp.longestSpan() << std::endl;
@@ -21,7 +21,7 @@ int main() {
         std::cout << "Test 1: Sequential numbers (0 to 9999)" << std::endl;
         Span largeSpan(10000);
         for (int i = 0; i < 10000; ++i) {
-            largeSpan.addnumber(i);
+            largeSpan.addNumber(i);
         }
         
     
@@ -39,7 +39,7 @@ int main() {
         
         for (int i = 0; i < 15000; ++i) {
             int randomNum = rand() % 100001 - 50000; // Range: -50000 to 50000
-            randomSpan.addnumber(randomNum);
+            randomSpan.addNumber(randomNum);
         }
         
         int shortestRand = randomSpan.shortestSpan();
@@ -55,12 +55,12 @@ int main() {
         
         // Add 10,000 of the same number
         for (int i = 0; i < 10000; ++i) {
-            duplicateSpan.addnumber(42);
+            duplicateSpan.addNumber(42);
         }
         
         // Add some different numbers
-        duplicateSpan.addnumber(1);
-        duplicateSpan.addnumber(100);
+        duplicateSpan.addNumber(1);
+        duplicateSpan.addNumber(100);
 
         std::cout << "Shortest span: " << duplicateSpan.shortestSpan() << std::endl;
         std::cout << "Longest span: " << duplicateSpan.longestSpan() << std::endl;
@@ -70,7 +70,7 @@ int main() {
         // Test capacity limit
         Span limitSpan(10000);
         for (int i = 0; i < 10000; ++i) {
-            limitSpan.addnumber(i * 2);
+            limitSpan.addNumber(i * 2);
         }
         
         std::cout << "Successfully added exactly 10,000 numbers" << std::endl;
@@ -85,6 +85,21 @@ int main() {
     } catch (const std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
+    // using addRange method
+    try {
+        std::cout << "\n=== Test 5: Using addRange method ===" << std::endl;
+        std::vector<int> nums;
 
+        Span Span(15); // Empty span to demonstrate adding from an empty set
+        Span.addNumber(10);
+        Span.addNumber(20);
+        Span.addNumber(30);
+        Span.addRange(nums.begin(), nums.end());
+        std::cout << "Numbers added using addRange." << std::endl;
+        std::cout << "Shortest span: " << Span.shortestSpan() << std::endl;
+        std::cout << "Longest span: " << Span.longestSpan() << std::endl;
+    } catch (const std::exception &e) {
+        std::cerr << "Exception in addRange test: " << e.what() << std::endl;
+    }
     return 0;
 }
