@@ -1,4 +1,10 @@
 #include "easyfind.hpp"
+#include <iostream>
+#include <vector>
+#include <deque>
+#include <list>
+#include <set>
+
 
 int main()
 {
