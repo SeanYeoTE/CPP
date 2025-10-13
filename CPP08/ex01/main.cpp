@@ -1,6 +1,7 @@
 #include "Span.hpp"
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 int main() {
     try {
@@ -75,12 +76,12 @@ int main() {
         
         std::cout << "Successfully added exactly 10,000 numbers" << std::endl;
         
-        // try {
-        //     limitSpan.addnumber(99999); // This should throw
-        //     std::cout << "ERROR: Should have thrown an exception!" << std::endl;
-        // } catch (const std::exception &e) {
-        //     std::cout << "Correctly caught capacity exception: " << e.what() << std::endl;
-        // }
+        try {
+            limitSpan.addNumber(99999); // This should throw
+            std::cout << "ERROR: Should have thrown an exception!" << std::endl;
+        } catch (const std::exception &e) {
+            std::cout << "Correctly caught capacity exception: " << e.what() << std::endl;
+        }
 
     } catch (const std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
@@ -89,15 +90,21 @@ int main() {
     try {
         std::cout << "\n=== Test 5: Using addRange method ===" << std::endl;
         std::vector<int> nums;
+        nums.push_back(5);
+        nums.push_back(15);
+        nums.push_back(25);
+        nums.push_back(35);
 
-        Span Span(15); // Empty span to demonstrate adding from an empty set
-        Span.addNumber(10);
-        Span.addNumber(20);
-        Span.addNumber(30);
-        Span.addRange(nums.begin(), nums.end());
+        Span span(15); // Span to demonstrate adding multiple numbers in one call
+        span.addNumber(10);
+        span.addNumber(20);
+        span.addNumber(30);
+        span.addRange(nums.begin(), nums.end());
+        for (int i = 0 ; i < span.size() ; i++)
+            std::cout << span[i] << " ";
         std::cout << "Numbers added using addRange." << std::endl;
-        std::cout << "Shortest span: " << Span.shortestSpan() << std::endl;
-        std::cout << "Longest span: " << Span.longestSpan() << std::endl;
+        std::cout << "Shortest span: " << span.shortestSpan() << std::endl;
+        std::cout << "Longest span: " << span.longestSpan() << std::endl;
     } catch (const std::exception &e) {
         std::cerr << "Exception in addRange test: " << e.what() << std::endl;
     }

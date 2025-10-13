@@ -1,11 +1,8 @@
 #ifndef SPAN_HPP
 #define SPAN_HPP
 
-#include <iostream>
-#include <algorithm>
+
 #include <climits>
-#include <set>
-#include <iterator>
 #include <vector>
 class Span
 {
@@ -14,11 +11,12 @@ class Span
         ~Span();
         Span(Span const &other);
         Span &operator= (Span const &rhs);
-
+        int operator[](unsigned int index) const;
         void addNumber(int number);
         int shortestSpan();
         int longestSpan();
         void addRange(std::vector<int>::iterator start, std::vector<int>::iterator end);
+        int size() const;
 
     private:
         unsigned int _n;
@@ -31,4 +29,4 @@ class Span
 
 };
 
-#endif 
+#endif

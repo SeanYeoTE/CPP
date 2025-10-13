@@ -1,5 +1,9 @@
 #include "Span.hpp"
 
+#include <algorithm>
+#include <stdexcept>
+#include <iterator>
+
 
 Span::Span(unsigned int n) : _n(n) {}
 
@@ -14,6 +18,13 @@ Span &Span::operator=(Span const &rhs) {
         _numbers = rhs._numbers;
     }
     return *this;
+}
+
+int Span::operator[](unsigned int index) const {
+    if (index >= _numbers.size()) {
+        throw std::out_of_range("Index out of range");
+    }
+    return _numbers[index];
 }
 
 void Span::addNumber(int number) {
@@ -59,6 +70,10 @@ void Span::checkEmpty() const {
     if (_numbers.empty()) {
         throw std::runtime_error("Span is empty, cannot compute spans");
     }
+}
+
+int Span::size() const {
+    return _numbers.size();
 }
 
 void Span::addRange(std::vector<int>::iterator start, std::vector<int>::iterator end) {
