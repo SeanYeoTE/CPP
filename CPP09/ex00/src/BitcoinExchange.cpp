@@ -54,7 +54,7 @@ bool BitcoinExchange::valid_date(const std::string &date)
     std::string month = date.substr(5, 2);
     std::string day = date.substr(8, 2);
 
-    int yearInt, monthInt, dayInt;
+    int monthInt, dayInt;
     
     // Check if strings contain only digits
     for (size_t i = 0; i < year.length(); i++) {
@@ -67,12 +67,12 @@ bool BitcoinExchange::valid_date(const std::string &date)
         if (!std::isdigit(day[i])) return false;
     }
     
-    yearInt = std::atoi(year.c_str());
+    // yearInt = std::atoi(year.c_str());
     monthInt = std::atoi(month.c_str());
     dayInt = std::atoi(day.c_str());
     
-    if (yearInt < 1000 || yearInt > 2025)
-        return false;
+    // if (yearInt < 1000 || yearInt > 9999)
+    //     return false;
     if (monthInt < 1 || monthInt > 12)
         return false;
     if (dayInt < 1 || dayInt > 31)
@@ -88,8 +88,8 @@ void BitcoinExchange::validate_value(const std::string &value)
     size_t start = 0;
     
     // Skip leading whitespace (should already be trimmed, but just in case)
-    while (start < value.length() && std::isspace(value[start]))
-        start++;
+    // while (start < value.length() && std::isspace(value[start]))
+    //     start++;
     
     // Check for optional + or - sign
     if (start < value.length() && (value[start] == '+' || value[start] == '-'))
@@ -172,13 +172,13 @@ void BitcoinExchange::processLine(const std::string& date, const std::string& va
     try {
         // Validate date format
         if (!valid_date(date)) {
-            std::cout << "Error: bad input => " << date << std::endl;
+            throw std::invalid_argument("bad input => " + date);
             return;
         }
         
         // Validate value
         if (value.empty()) {
-            std::cout << "Error: bad input => " << value << std::endl;
+            throw std::invalid_argument("bad input => " + value);
             return;
         }
         
