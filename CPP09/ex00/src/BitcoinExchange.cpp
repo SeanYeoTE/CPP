@@ -87,10 +87,7 @@ void BitcoinExchange::validate_value(const std::string &value)
     bool hasDigit = false;
     size_t start = 0;
     
-    // Skip leading whitespace (should already be trimmed, but just in case)
-    // while (start < value.length() && std::isspace(value[start]))
-    //     start++;
-    
+  
     // Check for optional + or - sign
     if (start < value.length() && (value[start] == '+' || value[start] == '-'))
         start++;
