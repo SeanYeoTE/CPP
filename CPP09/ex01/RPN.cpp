@@ -28,12 +28,12 @@ double RPN::calculate() {
             // If the token is a number
             int num = std::atoi(token.c_str());
             if (num > 9 || num < -9)
-            throw std::invalid_argument("Number is not a single digit");
+                throw std::invalid_argument("Number is not a single digit");
             _stack.push(num);
         } else {
             // If the token is an operator
             if (_stack.size() < 2) {
-                throw std::runtime_error("Not enough operands in stack for operation.");   
+                throw std::runtime_error("Not enough operands in stack for operation.");
             }
             int b = _stack.top();
             _stack.pop();
