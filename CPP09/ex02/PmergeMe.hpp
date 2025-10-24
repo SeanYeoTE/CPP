@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <climits>
 
+#define DEBUG 1
 template <typename T>
 class PmergeMe {
     public:
@@ -26,23 +27,21 @@ class PmergeMe {
         T _original;
         typename T::value_type _last;
         double _time;
-        std::vector<std::pair<int, int> > _pairs;
+        double _comparisons;
+        std::vector<int> _pairs;
         bool _hasOddElement;
         int _oddElement;
+        std::vector<int> _oddpair;
         
-        struct ComparePairsBySecond {
-            bool operator()(const std::pair<int, int>& a, const std::pair<int, int>& b) const;
-        };
-        
-    
+     
+        void printpairs(const std::vector<int> &pairs, int depth, int size);
+        bool compare(int a, int b);
+        void mergepairs(std::vector<int>& result,
+                        const std::vector<int>& left,
+                        const std::vector<int>& right);
         void fordJohnsonSort();
-        void pairing();
-        void recursiveSort(std::vector<std::pair<int, int> > &pairs);
-        void mergeSequences(std::vector<std::pair<int, int> > &result, 
-                           const std::vector<std::pair<int, int> > &left,
-                           const std::vector<std::pair<int, int> > &right);
-        std::vector<int> extractSmallerElements() const;
-        void insertRemainingElements(const std::vector<int> &smaller);
+        void pairElements();
+        void recursiveSort(std::vector<int>& pairs, int depth, int size);
         int binarySearch(int value, int left, int right);
         std::vector<int> generateJacobsthalSequence(int n);
         void insertElement(int element);

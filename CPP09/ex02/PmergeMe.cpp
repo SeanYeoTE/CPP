@@ -1,4 +1,9 @@
 #include "PmergeMe.hpp"
+#include <cstddef>
+#include <iostream>
+#include <iterator>
+
+
 
 
 template <typename T>
@@ -12,6 +17,7 @@ PmergeMe<T>::PmergeMe(const PmergeMe &other) {
     _data = other._data;
     _last = other._last;
     _time = other._time;
+    _comparisons = other._comparisons;
 }
 
 template <typename T>
@@ -20,6 +26,7 @@ PmergeMe<T> &PmergeMe<T>::operator=(const PmergeMe &other) {
         _data = other._data;
         _last = other._last;
         _time = other._time;
+        _comparisons = other._comparisons;
     }
     return *this;
 }
@@ -67,20 +74,36 @@ std::string PmergeMe<std::deque<int> >::getContainerType() const {
 template <typename T>
 void PmergeMe<T>::fordJohnsonSort() {
     _original = _data;
+    _hasOddElement = false;
 
     if (_data.size() <= 1)
         return;
     clock_t start = clock();
-    
-    pairing();
+
+    pairElements();
     if (!_pairs.empty()) {
-        recursiveSort(_pairs);
-        insertRemainingElements(extractSmallerElements());
+        recursiveSort(_pairs, 0, 1);
+        printpairs(_pairs, 0, 1);
+        // Reconstruct _data
+        // _data.clear();
+        // for (size_t k = 0; k < _pairs.size(); k += 1) {
+        //     _data.push_back(_pairs[k]); 
+        // }
+
+        // seperate into main and pend
+        // std::vector<int> order = generateJacobsthalSequence(_pairs.size() / 2);
+        // for (size_t i = 0; i < order.size(); ++i) {
+        //     int idx = order[i];
+        //     int pos = idx * 2 + 1;
+        //     if (pos >= 0 && pos < (int)_pairs.size()) {
+        //         insertElement(_pairs[pos]); // larger elements
+        //     }
+        // }
     }
 
-    if (_hasOddElement) {
-        insertElement(_oddElement);
-    };
+    // if (_hasOddElement) {
+    //     insertElement(_oddElement);
+    // }
 
     clock_t end = clock();
     _time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000000;
@@ -88,7 +111,7 @@ void PmergeMe<T>::fordJohnsonSort() {
 
 
 template <typename T>
-void PmergeMe<T>::pairing() {
+void PmergeMe<T>::pairElements() {
     _pairs.clear();
     _hasOddElement = false;
 
@@ -96,105 +119,62 @@ void PmergeMe<T>::pairing() {
         if (i + 1 < _data.size()) {
             int first = _data[i];
             int second = _data[i + 1];
-            if (first > second)
-                _pairs.push_back(std::make_pair(second, first));
-            else
-                _pairs.push_back(std::make_pair(first, second));
+            // if (first > second)
+            //     swap first and second
+            _pairs.push_back(first);
+            _pairs.push_back(second);
         }
         else {
             _hasOddElement = true;
             _oddElement = _data[i];
         }
     }
+    int num_pairs = _pairs.size() / 2;
+    if (num_pairs % 2 != 0) {
+        // remove the last 2 elements and store them as oddpair
+        _oddpair.push_back(_pairs[_pairs.size()-2]);
+        _oddpair.push_back(_pairs[_pairs.size()-1]);
+        _pairs.pop_back();
+        _pairs.pop_back();
+    }
 }
 
 template <typename T>
-void PmergeMe<T>::recursiveSort(std::vector<std::pair<int, int> > &pairs) {
-    if (pairs.size() <= 1)
+void PmergeMe<T>::recursiveSort(std::vector<int>& pairs, int depth, int size) {
+    depth ++;
+    
+    int num_pairs = pairs.size() / size;
+    if (num_pairs <= 1) {
+        // if (num_pairs == 1 && pairs[0] > pairs[1]) {
+        // if (num_pairs == 1 && compare(pairs[0], pairs[1])) {
+        //     std::swap(pairs[0], pairs[1]);
+        // }
         return;
-    // Recursive Ford-Johnson approach: divide into sub-sequences
-    size_t mid = pairs.size() / 2;
-    
-    // Create left and right sub-sequences
-    std::vector<std::pair<int, int> > left(pairs.begin(), pairs.begin() + mid);
-    std::vector<std::pair<int, int> > right(pairs.begin() + mid, pairs.end());
-    
-    // Recursively sort both halves
-    recursiveSort(left);
-    recursiveSort(right);
-    
-    // Merge the sorted halves using Ford-Johnson merge strategy
-    mergeSequences(pairs, left, right);
-}
+    }
+    size = size * 2;
+    printpairs(pairs, depth, size);
+    std::vector<int>::iterator start = pairs.begin();
 
-
-template <typename T>
-void PmergeMe<T>::mergeSequences(std::vector<std::pair<int, int> > &result,
-                                const std::vector<std::pair<int, int> > &left,
-                                const std::vector<std::pair<int, int> > &right) {
-    size_t leftIdx = 0, rightIdx = 0, resultIdx = 0;
-    
-    // Merge the two sorted sequences by comparing the larger elements (second values)
-    while (leftIdx < left.size() && rightIdx < right.size()) {
-        if (left[leftIdx].second <= right[rightIdx].second) {
-            result[resultIdx] = left[leftIdx];
-            leftIdx++;
-        } else {
-            result[resultIdx] = right[rightIdx];
-            rightIdx++;
+    // std::vector<int>::iterator it = start;
+    for (std::vector<int>::iterator it = start; it + size <= pairs.end(); it += size) {
+        if (compare(*(it + (size / 2 - 1)), *(it + (size - 1)))) {
+            for (int i = 0; i < size / 2; i++) {
+                std::swap(*(it + i), *(it + i + size / 2));
+            }
         }
-        resultIdx++;
     }
-    
-    // Copy remaining elements from left sequence
-    while (leftIdx < left.size()) {
-        result[resultIdx] = left[leftIdx];
-        leftIdx++;
-        resultIdx++;
-    }
-    
-    // Copy remaining elements from right sequence
-    while (rightIdx < right.size()) {
-        result[resultIdx] = right[rightIdx];
-        rightIdx++;
-        resultIdx++;
-    }
-}
 
-template <typename T>
-std::vector<int> PmergeMe<T>::extractSmallerElements() const {
-    std::vector <int> smaller;
+    recursiveSort(pairs, depth, size);
 
-    for (std::vector<std::pair<int, int> >::const_iterator it = _pairs.begin();
-         it != _pairs.end(); ++it) {
-        smaller.push_back(it->first);
-    }
-    return smaller;
-}
-
-template <typename T>
-void PmergeMe<T>::insertRemainingElements(const std::vector<int> &smaller) {
+//     // write newly arranged pairs back to _data
     _data.clear();
-    for (std::vector<std::pair<int, int> >::const_iterator it = _pairs.begin();
-         it != _pairs.end(); ++it) {
-        _data.push_back(it->second);
+    for (size_t k = 0; k < pairs.size(); k += 1) {
+        _data.push_back(pairs[k]);
     }
-
-    std::vector<int> jacobsthal = generateJacobsthalSequence(smaller.size());
-
-    for (std::vector<int>::const_iterator it = jacobsthal.begin();
-         it != jacobsthal.end(); ++it) {
-        int index = *it;
-        if (index >= 0 && index < static_cast<int>(smaller.size())) {
-            int value = smaller[index];
-            int pos = binarySearch(value, 0, static_cast<int>(_data.size()) - 1);
-            _data.insert(_data.begin() + pos, value);
+    // if there is an oddpair, append it back to _data
+    if (!_oddpair.empty()) {
+        for (size_t k = 0; k < _oddpair.size(); k += 1) {
+            _data.push_back(_oddpair[k]);
         }
     }
 }
-
-
-
-
-
-

@@ -1,13 +1,29 @@
 #include "PmergeMe.hpp"
 
 template <typename T>
+void PmergeMe<T>::printpairs(const std::vector<int> &pairs, int depth, int size) {
+    std::cout << "Depth " << depth << ": ";
+    std::cout << "Pairs: ";
+    for (size_t i = 0; i < pairs.size(); i = i + size) {
+        std::cout << "(";
+        for (size_t j = i; j < i + size; ++j) {
+            if (j >= pairs.size())
+                break;
+            std::cout << pairs[j] << (j == i + size - 1 ? "" : ", ");
+        }
+        std::cout << ") ";
+    }
+    std::cout << std::endl;
+}
+
+template <typename T>
 void PmergeMe<T>::displayArray() const {
     std::cout << "Before:";
-    for (long unsigned int i = 0; i < _data.size(); ++i) {
+    for (long unsigned int i = 0; i < _original.size(); ++i) {
         std::cout << " ";
         std::cout << _original[i];
     }
-    std::cout << "\nAfter: ";
+    std::cout << "\nAfter : ";
     for (long unsigned int i = 0; i < _data.size(); ++i) {
         std::cout << " ";
         std::cout << _data[i];
@@ -17,16 +33,30 @@ void PmergeMe<T>::displayArray() const {
 
 template <typename T>
 void PmergeMe<T>::displayResults() const {
-    std::cout << "Time to process a range of " << _data.size() 
+    if (DEBUG) {
+        std::cout << "Time to process a range of " << _original.size() 
+                 << " elements with std::" << getContainerType() 
+                 << " : " << _time << " us " <<  "Total comparisons: " << _comparisons << std::endl;
+    }
+    else {
+        std::cout << "Time to process a range of " << _original.size() 
                  << " elements with std::" << getContainerType() 
                  << " : " << _time << " us" << std::endl;
 }
+}
+
+template <typename T>
+bool PmergeMe<T>::compare(int a, int b) {
+    _comparisons++;
+    return a > b;
+}
+
 
 template <typename T>
 int PmergeMe<T>::binarySearch(int value, int left, int right) {
     while (left <= right) {
         int mid = left + (right - left) / 2;
-        if (_data[mid] < value)
+        if (compare(value, _data[mid]))
             left = mid + 1;
         else
             right = mid - 1;
@@ -77,11 +107,6 @@ std::vector<int> PmergeMe<T>::generateJacobsthalSequence(int n) {
     return jacobsthal;
 }
 
-template <typename T>
-bool PmergeMe<T>::ComparePairsBySecond::operator()(const std::pair<int, int>& a, const std::pair<int, int>& b) const
-{
-    return a.second < b.second;
-}
 
 template <typename T>
 void PmergeMe<T>::insertElement(int element) {
