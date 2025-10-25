@@ -62,18 +62,18 @@ check_program() {
 # Function to verify sorted output
 verify_sorted() {
     local output="$1"
-    local after_line=$(echo "$output" | grep "After:" | head -1)
+    local after_line=$(echo "$output" | grep "After :" | head -1)
     
     if [ -z "$after_line" ]; then
-        print_error "No 'After:' line found in output"
+        print_error "No 'After :' line found in output"
         return 1
     fi
-    
-    # Extract numbers from "After:" line
-    local numbers=$(echo "$after_line" | sed 's/After://' | tr -s ' ' | sed 's/^ *//')
+
+    # Extract numbers from "After :" line
+    local numbers=$(echo "$after_line" | sed 's/After ://' | tr -s ' ' | sed 's/^ *//')
     
     if [ -z "$numbers" ]; then
-        print_error "No numbers found in 'After:' line"
+        print_error "No numbers found in 'After :' line"
         return 1
     fi
     
@@ -157,7 +157,10 @@ run_test() {
             return 0
         else
             print_error "Output is not sorted correctly"
-            # echo "Output: $program_output"
+            # Compute expected sorted output
+            local expected_sorted=$(echo "$test_input" | tr ' ' '\n' | sort -n | tr '\n' ' ' | sed 's/ $//')
+            print_error "Expected: After: $expected_sorted"
+            echo "Program output:"
             echo "$program_output"
             return 1
         fi

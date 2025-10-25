@@ -9,7 +9,7 @@
 #include <cstdlib>
 #include <climits>
 
-#define DEBUG 1
+#define DEBUG 0
 template <typename T>
 class PmergeMe {
     public:
@@ -32,6 +32,7 @@ class PmergeMe {
         bool _hasOddElement;
         int _oddElement;
         std::vector<int> _oddpair;
+        int _size;
         
      
         void printpairs(const std::vector<int> &pairs, int depth, int size);
@@ -41,10 +42,12 @@ class PmergeMe {
                         const std::vector<int>& right);
         void fordJohnsonSort();
         void pairElements();
-        void recursiveSort(std::vector<int>& pairs, int depth, int size);
-        int binarySearch(int value, int left, int right);
+        void recursiveSort(std::vector<int>& pairs, int depth);
+        void insertion(std::vector<int>& pairs, int depth);
         std::vector<int> generateJacobsthalSequence(int n);
         void insertElement(int element);
+        template <typename U>
+        int binarySearch(int value, int left, int right, const U& arr);
         std::string getContainerType() const;
 };
 
