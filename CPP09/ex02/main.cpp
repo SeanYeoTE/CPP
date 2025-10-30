@@ -14,7 +14,9 @@ int main(int argc, char **argv) {
         // pmergeMeDeque.processInput(argc, argv);
 
         pmergeMe.displayArray();
+
         pmergeMe.displayResults();
+        // pmergeMeDeque.displayArray();
         // pmergeMeDeque.displayResults();
 
     } catch (const std::exception &e) {

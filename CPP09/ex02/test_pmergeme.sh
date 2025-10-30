@@ -364,62 +364,62 @@ main() {
     fi
     
     # Test 14: 20 random numbers
-    # ((total_tests++))
-    # local random_20=$(shuf -i 1-1000 -n 20 | tr "\n" " ")
-    # if run_test "20 random numbers" "$random_20" "false"; then
-    #     ((passed_tests++))
-    # fi
+    ((total_tests++))
+    local random_20=$(shuf -i 1-1000 -n 20 | tr "\n" " ")
+    if run_test "20 random numbers" "$random_20" "false"; then
+        ((passed_tests++))
+    fi
     
-    # Test 15: 50 random numbers
-    # ((total_tests++))
-    # local random_50=$(shuf -i 1-5000 -n 50 | tr "\n" " ")
-    # if run_test "50 random numbers" "$random_50" "false"; then
-    #     ((passed_tests++))
-    # fi
+    Test 15: 50 random numbers
+    ((total_tests++))
+    local random_50=$(shuf -i 1-5000 -n 50 | tr "\n" " ")
+    if run_test "50 random numbers" "$random_50" "false"; then
+        ((passed_tests++))
+    fi
     
     # Phase 4: Performance Tests
-    # print_header "Phase 4: Performance Tests"
+    print_header "Phase 4: Performance Tests"
     
-    # # Check if bc is available for timing calculations
-    # if ! command -v bc &> /dev/null; then
-    #     print_error "bc command not found. Skipping precise timing calculations."
-    #     print_error "Install bc with: sudo apt-get install bc"
-    # fi
+    # Check if bc is available for timing calculations
+    if ! command -v bc &> /dev/null; then
+        print_error "bc command not found. Skipping precise timing calculations."
+        print_error "Install bc with: sudo apt-get install bc"
+    fi
     
-    # Performance test sizes
-    # local sizes=(100 500 1000 3000 5000)
+    Performance test sizes
+    local sizes=(100 500 1000 3000 5000)
     
-    # for size in "${sizes[@]}"; do
-    #     ((total_tests++))
-    #     if run_performance_test "$size"; then
-    #         ((passed_tests++))
-    #     fi
-    # done
+    for size in "${sizes[@]}"; do
+        ((total_tests++))
+        if run_performance_test "$size"; then
+            ((passed_tests++))
+        fi
+    done
     
     # Phase 5: Stress Tests (optional, only if previous tests passed)
-    # if [ $passed_tests -eq $total_tests ]; then
-    #     print_header "Phase 5: Stress Tests"
+    if [ $passed_tests -eq $total_tests ]; then
+        print_header "Phase 5: Stress Tests"
         
-    #     read -p "Run stress tests with very large inputs? (y/n): " -n 1 -r
-    #     echo
-    #     if [[ $REPLY =~ ^[Yy]$ ]]; then
-    #         local stress_sizes=(10000 20000 50000 100000 250000 500000)
+        read -p "Run stress tests with very large inputs? (y/n): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            local stress_sizes=(10000 20000 50000 100000 250000 500000)
             
-    #         echo -e "${YELLOW}Warning: Testing with very large inputs (up to 500K elements)${NC}"
-    #         echo -e "${YELLOW}This may take several minutes and could reveal stack overflow issues${NC}"
+            echo -e "${YELLOW}Warning: Testing with very large inputs (up to 500K elements)${NC}"
+            echo -e "${YELLOW}This may take several minutes and could reveal stack overflow issues${NC}"
             
-    #         for size in "${stress_sizes[@]}"; do
-    #             ((total_tests++))
-    #             echo -e "${BLUE}Testing with $size elements (this may take a while...)${NC}"
-    #             if run_performance_test "$size"; then
-    #                 ((passed_tests++))
-    #             else
-    #                 echo -e "${RED}Failed at $size elements - consider this the limit${NC}"
-    #                 break
-    #             fi
-    #         done
-    #     fi
-    # fi
+            for size in "${stress_sizes[@]}"; do
+                ((total_tests++))
+                echo -e "${BLUE}Testing with $size elements (this may take a while...)${NC}"
+                if run_performance_test "$size"; then
+                    ((passed_tests++))
+                else
+                    echo -e "${RED}Failed at $size elements - consider this the limit${NC}"
+                    break
+                fi
+            done
+        fi
+    fi
     
     # Summary
     print_header "Test Summary"

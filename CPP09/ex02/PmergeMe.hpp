@@ -10,6 +10,7 @@
 #include <climits>
 
 #define DEBUG 0
+
 template <typename T>
 class PmergeMe {
     public:
@@ -21,29 +22,25 @@ class PmergeMe {
         void processInput(int argc, char **argv);
         void displayResults() const;
         void displayArray() const;
+        void fordJohnsonSort();
+        T getData() const;
+        void setData(T data);
 
     private:
         T _data;
         T _original;
-        typename T::value_type _last;
         double _time;
-        double _comparisons;
+        long _comparisons;
         std::vector<int> _pairs;
         bool _hasOddElement;
         int _oddElement;
-        std::vector<int> _oddpair;
-        int _size;
         
-     
         void printpairs(const std::vector<int> &pairs, int depth, int size);
         bool compare(int a, int b);
-        void mergepairs(std::vector<int>& result,
-                        const std::vector<int>& left,
-                        const std::vector<int>& right);
-        void fordJohnsonSort();
         void pairElements();
-        void recursiveSort(std::vector<int>& pairs, int depth);
-        void insertion(std::vector<int>& pairs, int depth);
+        void recursiveSort(std::vector<int>& pairs);
+        void mergePairs(std::vector<int>& result, const std::vector<int>& left, const std::vector<int>& right);
+        void insertion();
         std::vector<int> generateJacobsthalSequence(int n);
         void insertElement(int element);
         template <typename U>
