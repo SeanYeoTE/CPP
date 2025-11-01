@@ -9,7 +9,16 @@
 #include <cstdlib>
 #include <climits>
 
-#define DEBUG 0
+// ANSI color codes for debug output
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define YELLOW "\033[33m"
+#define BLUE "\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN "\033[36m"
+#define RESET "\033[0m"
+
+#define DEBUG 1
 
 template <typename T>
 class PmergeMe {
@@ -31,16 +40,19 @@ class PmergeMe {
         T _original;
         double _time;
         long _comparisons;
-        std::vector<int> _pairs;
+        T _pairs;
         bool _hasOddElement;
         int _oddElement;
-        
-        void printpairs(const std::vector<int> &pairs, int depth, int size);
+        size_t _final_size;
+
+        void printpairs(const T &pairs, int depth, int size);
+        void printchains(const T &main_chain, const T &pend_chain, const T &remain_chain);
         bool compare(int a, int b);
         void pairElements();
-        void recursiveSort(std::vector<int>& pairs);
-        void mergePairs(std::vector<int>& result, const std::vector<int>& left, const std::vector<int>& right);
+        void recursiveSort(const T &pairs);
+        void mergePairs(T &result, const T &left, const T &right);
         void insertion();
+        void main_pend_seperation(T &main_chain, T &pend_chain, T &remain_chain);
         std::vector<int> generateJacobsthalSequence(int n);
         void insertElement(int element);
         template <typename U>
