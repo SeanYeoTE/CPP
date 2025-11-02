@@ -70,18 +70,23 @@ verify_sorted() {
     fi
 
     # Extract numbers from "After :" line
-    local numbers=$(echo "$after_line" | sed 's/After ://' | tr -s ' ' | sed 's/^ *//')
-    
+    local numbers=$(echo "$after_line" | sed 's/After : *//' | tr -s ' ' | sed 's/^ *//')
+
     if [ -z "$numbers" ]; then
         print_error "No numbers found in 'After :' line"
         return 1
     fi
-    
+
     # Convert to array and check if sorted
     local prev=""
     local is_sorted=true
-    
-    for num in $numbers; do
+    local num_array=($numbers)
+
+    for num in "${num_array[@]}"; do
+        # Skip empty strings
+        if [ -z "$num" ]; then
+            continue
+        fi
         if [ -n "$prev" ] && [ "$num" -lt "$prev" ]; then
             is_sorted=false
             break
@@ -148,11 +153,7 @@ run_test() {
         if verify_sorted "$program_output"; then
             print_success "Output is correctly sorted"
             if [ "$USE_VALGRIND" = true ]; then
-                echo "Program output:"
-                echo "$program_output"
                 echo "Memory check: PASSED"
-            else
-                echo "$program_output"
             fi
             return 0
         else
@@ -370,7 +371,7 @@ main() {
         ((passed_tests++))
     fi
     
-    Test 15: 50 random numbers
+    # Test 15: 50 random numbers
     ((total_tests++))
     local random_50=$(shuf -i 1-5000 -n 50 | tr "\n" " ")
     if run_test "50 random numbers" "$random_50" "false"; then
@@ -386,7 +387,7 @@ main() {
         print_error "Install bc with: sudo apt-get install bc"
     fi
     
-    Performance test sizes
+    # Performance test sizes
     local sizes=(100 500 1000 3000 5000)
     
     for size in "${sizes[@]}"; do

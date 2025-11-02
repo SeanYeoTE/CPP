@@ -1,4 +1,5 @@
 #include "PmergeMe.hpp"
+#include "utils.hpp"
 
 int main(int argc, char **argv) {
     if (argc < 2) {
@@ -13,9 +14,9 @@ int main(int argc, char **argv) {
         // PmergeMe<std::deque<int> > pmergeMeDeque;
         // pmergeMeDeque.processInput(argc, argv);
 
-        pmergeMe.displayArray();
+        displayArray(pmergeMe.getOriginal(), pmergeMe.getData());
 
-        pmergeMe.displayResults();
+        displayResults(pmergeMe.getOriginal(), pmergeMe.getTime(), pmergeMe.getComparisons(), "vector");
         // pmergeMeDeque.displayArray();
         // pmergeMeDeque.displayResults();
 

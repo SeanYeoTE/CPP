@@ -18,7 +18,7 @@
 #define CYAN "\033[36m"
 #define RESET "\033[0m"
 
-#define DEBUG 1
+#define DEBUG 0
 
 template <typename T>
 class PmergeMe {
@@ -29,10 +29,14 @@ class PmergeMe {
         PmergeMe &operator=(const PmergeMe &other);
 
         void processInput(int argc, char **argv);
-        void displayResults() const;
         void displayArray() const;
         void fordJohnsonSort();
+
+        // Utility functions moved to utils.hpp
         T getData() const;
+        T getOriginal() const;
+        double getTime() const;
+        long getComparisons() const;
         void setData(T data);
 
     private:
@@ -45,9 +49,8 @@ class PmergeMe {
         int _oddElement;
         size_t _final_size;
 
-        void printpairs(const T &pairs, int depth, int size);
-        void printchains(const T &main_chain, const T &pend_chain, const T &remain_chain);
         bool compare(int a, int b);
+        bool check_valid_index(size_t index, size_t size);
         void pairElements();
         void recursiveSort(const T &pairs);
         void mergePairs(T &result, const T &left, const T &right);
@@ -57,6 +60,8 @@ class PmergeMe {
         void insertElement(int element);
         template <typename U>
         int binarySearch(int value, int left, int right, const U& arr);
+        template <typename U>
+        int binarySearchWithBound(int value, int element_size, int right, const U& arr);
         std::string getContainerType() const;
 };
 
