@@ -57,8 +57,13 @@ template <typename T> void PmergeMe<T>::processInput(int argc, char **argv) {
     if (*endptr != '\0' || value < 0 || value > INT_MAX) {
       throw std::invalid_argument("Invalid input: " + std::string(argv[i]));
     }
-    _data.push_back(static_cast<int>(value));
-    _original.push_back(static_cast<int>(value));
+    int int_value = static_cast<int>(value);
+    // Check for duplicates
+    if (std::find(_data.begin(), _data.end(), int_value) != _data.end()) {
+      throw std::invalid_argument("Duplicate value found: " + std::string(argv[i]));
+    }
+    _data.push_back(int_value);
+    _original.push_back(int_value);
   }
 
   if (_data.empty()) {
@@ -109,28 +114,42 @@ template <typename T> void PmergeMe<T>::recursiveSort(const T &pairs) {
   }
   bool proceed = true;
   for (int size = 4; size <= n; size *= 2) {
+    std::cout << MAGENTA << "Recursive sort with size: " << size << RESET
+              << std::endl;
+    // int element_count = 0;
     for (int left_start = 0; left_start < n; left_start += size) {
       int mid = left_start + size / 2;
-      if (mid >= n) {
-        continue;
-      }
       int right_end = left_start + size;
       if (right_end > n) {
         right_end = n;
-        proceed = false;
+        // proceed = false;
+        break;
       }
-
+      // element_count += size;
+      
+      std::cout << CYAN << "Left start: " << left_start
+                << ", Mid: " << mid << ", Right end: " << right_end
+                << RESET << std::endl;
+    
       T left(pairs.begin() + left_start, pairs.begin() + mid);
       T right(pairs.begin() + mid, pairs.begin() + right_end);
       if (proceed) {
+        // print left and right before merging
+        std::cout << CYAN << "Merging left: ";
+        for (size_t i = 0; i < left.size(); ++i) {
+          std::cout << left[i] << " ";
+        }
+        std::cout << " and right: ";
+        for (size_t i = 0; i < right.size(); ++i) {
+          std::cout << right[i] << " ";
+        }
+        std::cout << RESET << std::endl;
         T merged;
         mergePairs(merged, left, right);
-        // printpairs(merged, 1, 2);
         for (size_t i = 0; i < merged.size(); ++i) {
           _pairs[left_start + i] = merged[i];
         }
       }
-      // printpairs(pairs, 100, 2);
     }
     _final_size = size;
   }
@@ -140,81 +159,20 @@ template <typename T> void PmergeMe<T>::insertion() {
   T main_chain;
   T pend_chain;
   T remain_chain;
+  T bounds;
 
   std::cout << YELLOW << "Final size: " << _final_size << RESET << std::endl;
-  main_pend_seperation(main_chain, pend_chain, remain_chain);
+  main_pend_seperation(main_chain, pend_chain, remain_chain, bounds);
   printchains(main_chain, pend_chain, remain_chain);
 
-  size_t element_size = _final_size; // pend_chain contains individual elements
-
-  size_t num_pend_elements = pend_chain.size() / element_size;
+  size_t num_pend_elements = pend_chain.size() / _final_size;
   std::vector<int> jacobsthal = generateJacobsthalSequence(num_pend_elements + 1);
-  
+
   // Insert pend_chain elements into main_chain based on Jacobsthal sequence
-  // Start from second Jacobsthal number (index 1)
-  // do binary search on the bound numbers in main_chain
-  // insert the group of elements from pend_chain into main_chain
-  // make sure not to break up element groups in main_chain
-  for (size_t j_idx = 1; j_idx < jacobsthal.size(); ++j_idx) {
-    int j = jacobsthal[j_idx] - jacobsthal[j_idx - 1]; // number of pend element groups to insert
-    std::cout << GREEN << "Inserting " << j << " pend element groups"
-              << RESET << std::endl;
-    if (j > static_cast<int>(num_pend_elements))
-      break;
-    // Insert groups starting from the back (highest index)
-    for (int group = j - 1; group >= 0; --group) {
-      int pend_bound_end_idx = group * element_size + element_size - 1; // need to use -1 for 0-based index
-      int pend_bound_start_idx = group * element_size;
-      std::cout << GREEN << "Pend group to insert: ";
-      for (int k = pend_bound_start_idx; k <= pend_bound_end_idx; ++k) {
-        std::cout << pend_chain[k] << " ";
-      }
-      std::cout << RESET << std::endl;
-      // Find insertion position using binary search on bounds
-      int insert_pos = binarySearchWithBound(pend_chain[pend_bound_end_idx], element_size,
-                                             main_chain.size() - 1, main_chain);
+  insertJacobsthalGroups(main_chain, pend_chain, jacobsthal, num_pend_elements, bounds);
 
-      // Insert the entire group from pend_chain into main_chain at the found position
-      main_chain.insert(main_chain.begin() + insert_pos,
-                        pend_chain.begin() + pend_bound_start_idx,
-                        pend_chain.begin() + pend_bound_end_idx + 1);
-      printpairs(main_chain, 1, 2);
-      // need to remove the inserted elements from pend_chain
-      pend_chain.erase(pend_chain.begin() + pend_bound_start_idx,
-                       pend_chain.begin() + pend_bound_end_idx + 1);
-    }
-  }
   // Insert any remaining pend_chain groups (not covered by Jacobsthal sequence)
-  // could be more than one group
-  while (!pend_chain.empty()) {
-    int pend_bound_end_idx = element_size - 1; // need to use -1 for 0-based index
-    int pend_bound_start_idx = 0;
-    int num_remaining_groups = pend_chain.size() / element_size;
-    std::cout << GREEN << "Inserting remaining " << num_remaining_groups
-              << " pend element groups" << RESET << std::endl;
-
-    for (int group = num_remaining_groups - 1; group >= 0; --group) {
-      pend_bound_end_idx = group * element_size + element_size - 1;
-      pend_bound_start_idx = group * element_size;
-      std::cout << GREEN << "Pend group to insert: ";
-      for (int k = pend_bound_start_idx; k <= pend_bound_end_idx; ++k) {
-        std::cout << pend_chain[k] << " ";
-      }
-      std::cout << RESET << std::endl;
-      // Find insertion position using binary search on bounds
-      int insert_pos = binarySearchWithBound(pend_chain[pend_bound_end_idx], element_size,
-                                             main_chain.size() - 1, main_chain);
-
-      // Insert the entire group from pend_chain into main_chain at the found position
-      main_chain.insert(main_chain.begin() + insert_pos,
-                        pend_chain.begin() + pend_bound_start_idx,
-                        pend_chain.begin() + pend_bound_end_idx + 1);
-      printpairs(main_chain, 1, 2);
-      // need to remove the inserted elements from pend_chain
-      pend_chain.erase(pend_chain.begin() + pend_bound_start_idx,
-                       pend_chain.begin() + pend_bound_end_idx + 1);
-    }
-  }
+  insertRemainingGroups(main_chain, pend_chain);
   // Handle remain_chain - just append to back of main_chain
   if (!remain_chain.empty()) {
     main_chain.insert(main_chain.end(), remain_chain.begin(),
@@ -241,16 +199,24 @@ template <typename T> void PmergeMe<T>::fordJohnsonSort() {
   clock_t start = clock();
 
   pairElements();
-  recursiveSort(_pairs);
-  std::cout << MAGENTA << "After recursiveSort:" << RESET << std::endl;
-  printpairs(_pairs, 1, 2);
-  _final_size = _final_size / 2;
-  insertion();
-
-  if (_hasOddElement) {
-    insertElement(_oddElement);
+  if (_original.size() <= 3) {
+    // Special handling for 2 or 3 elements
+    _data = _pairs;
+    if (_hasOddElement) {
+      insertElement(_oddElement);
+    }
+  } else {
+    recursiveSort(_pairs);
+    std::cout << MAGENTA << "After recursiveSort:" << RESET << std::endl;
+    printpairs(_pairs, 1, 2);
+    if (_original.size() > 3) {
+      _final_size = _final_size / 2;
+      insertion();
+    }
+    if (_hasOddElement) {
+      insertElement(_oddElement);
+    }
   }
-
   clock_t end = clock();
   _time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000000;
 }
@@ -265,10 +231,9 @@ bool PmergeMe<T>::check_valid_index(size_t index, size_t size) {
 
 template <typename T>
 void PmergeMe<T>::main_pend_seperation(T &main_chain, T &pend_chain,
-                                       T &remain_chain) {
+                                       T &remain_chain, T &bounds) {
   size_t element_size = _final_size;
   size_t num_elements = _pairs.size() / element_size;
-
   // main = largest elements from all groups
   // pend = smallest elements from all groups except the first
   for (size_t i = 0; i < num_elements; ++i) {
@@ -279,6 +244,7 @@ void PmergeMe<T>::main_pend_seperation(T &main_chain, T &pend_chain,
     if (!valid) {
       break;
     } else {
+      bounds.push_back(_pairs[largest_idx]);
       if (i == 0  || i % 2 == 1) {
         // push all elements from smallestindx to largestidx into main_chain
         for (size_t j = smallest_idx; j <= largest_idx; ++j) {
@@ -294,7 +260,11 @@ void PmergeMe<T>::main_pend_seperation(T &main_chain, T &pend_chain,
       }
     }
   }
-
+  std::cout << CYAN << "Bounds: ";
+  for (size_t i = 0; i < bounds.size(); ++i) {
+    std::cout << bounds[i] << " ";
+  }
+  std::cout << RESET << std::endl;
   // remain_chain for any leftover elements
   size_t processed = num_elements * element_size;
   remain_chain.insert(remain_chain.end(), _pairs.begin() + processed,
@@ -321,12 +291,15 @@ int PmergeMe<T>::binarySearch(int value, int left, int right, const U &arr) {
 
 template <typename T>
 template <typename U>
-int PmergeMe<T>::binarySearchWithBound(int value, int element_size, int right,
+int PmergeMe<T>::binarySearchWithBound(int value, int right,
                                        const U &arr) {
   // Create temporary array with only bound elements (last element of each group)
   std::vector<int> bounds;
-  for (size_t i = element_size - 1; i <= static_cast<size_t>(right); i += element_size) {
+  for (size_t i = _final_size - 1; i <= static_cast<size_t>(arr.size() - 1); i += _final_size) {
     bounds.push_back(arr[i]);
+    if (arr[i] == right){
+      break;
+    }
   }
 
   // Perform binary search on the bounds array
@@ -341,8 +314,8 @@ int PmergeMe<T>::binarySearchWithBound(int value, int element_size, int right,
     }
   }
 
-  // Convert back to original array position by multiplying by element_size
-  return left * element_size;
+  // Convert back to original array position by multiplying by _final_size
+  return left * _final_size;
 }
 
 template <typename T>
@@ -379,6 +352,92 @@ template <typename T> void PmergeMe<T>::insertElement(int element) {
               << std::endl;
   }
   _data.insert(_data.begin() + pos, element);
+}
+
+template <typename T>
+void PmergeMe<T>::insertGroupIntoMainChain(T &main_chain, T &pend_chain, size_t groupStartIndex, size_t groupEndIndex, T &bounds) {
+  std::cout << GREEN << "Pend group to insert: ";
+  for (size_t k = groupStartIndex; k <= groupEndIndex; ++k) {
+    std::cout << pend_chain[k] << " ";
+  }
+  std::cout << RESET << std::endl;
+  
+  int boundValue = -1;
+  int boundIndex = -1;
+  if (!bounds.empty()) {
+    std::cout << GREEN << "Finding bound for pend element "
+              << pend_chain[groupEndIndex] << RESET << std::endl;
+    for (size_t i = 0; i < bounds.size(); ++i) {
+      if (bounds[i] == pend_chain[groupEndIndex]) {
+        boundIndex = i;
+        break;
+      }
+    }
+    boundIndex++; // move to next as the max bound for insertion
+    if (boundIndex >= static_cast<int>(bounds.size())) {
+      // If no larger bound, insert at end
+      boundValue = main_chain[main_chain.size() - 1];
+    }
+    else {
+      boundValue = bounds[boundIndex];
+    }
+  }
+  else {
+    boundValue = main_chain[main_chain.size() - 1];
+  }
+  int insert_pos = binarySearchWithBound(pend_chain[groupEndIndex], boundValue, main_chain);
+
+  // Insert the entire group from pend_chain into main_chain at the found position
+  main_chain.insert(main_chain.begin() + insert_pos,
+                    pend_chain.begin() + groupStartIndex,
+                    pend_chain.begin() + groupEndIndex + 1);
+
+  printpairs(main_chain, 1, 2);
+
+  // Remove the inserted elements from pend_chain
+  pend_chain.erase(pend_chain.begin() + groupStartIndex,
+                   pend_chain.begin() + groupEndIndex + 1);
+}
+
+template <typename T>
+void PmergeMe<T>::insertJacobsthalGroups(T &main_chain, T &pend_chain, const std::vector<int>& jacobsthal, size_t num_pend_elements, T &bounds) {
+  // Insert pend_chain elements into main_chain based on Jacobsthal sequence
+  // Start from second Jacobsthal number (index 1)
+  for (size_t jacobsthalIndex = 1; jacobsthalIndex < jacobsthal.size(); ++jacobsthalIndex) {
+    int groupsToInsert = jacobsthal[jacobsthalIndex] - jacobsthal[jacobsthalIndex - 1];
+    std::cout << GREEN << "Inserting " << groupsToInsert << " pend element groups"
+              << RESET << std::endl;
+
+    if (groupsToInsert > static_cast<int>(num_pend_elements))
+      break;
+
+    // Insert groups starting from the back (highest index)
+    for (int currentGroupIndex = groupsToInsert - 1; currentGroupIndex >= 0; --currentGroupIndex) {
+      size_t groupEndIndex = currentGroupIndex * _final_size + _final_size - 1;
+      size_t groupStartIndex = currentGroupIndex * _final_size;
+      insertGroupIntoMainChain(main_chain, pend_chain, groupStartIndex, groupEndIndex, bounds);
+    }
+  }
+}
+
+template <typename T>
+void PmergeMe<T>::insertRemainingGroups(T &main_chain, T &pend_chain) {
+  // Insert any remaining pend_chain groups (not covered by Jacobsthal sequence)
+  // bounds should not be needed here
+  // throw a empty bounds to satisfy function signature
+  T bounds;
+  bounds.clear();
+  while (!pend_chain.empty()) {
+    int num_remaining_groups = pend_chain.size() / _final_size;
+    std::cout << GREEN << "Inserting remaining " << num_remaining_groups
+              << " pend element groups" << RESET << std::endl;
+
+    for (int currentGroupIndex = num_remaining_groups - 1; currentGroupIndex >= 0; --currentGroupIndex) {
+      size_t groupEndIndex = currentGroupIndex * _final_size + _final_size - 1;
+      size_t groupStartIndex = currentGroupIndex * _final_size;
+      insertGroupIntoMainChain(main_chain, pend_chain, groupStartIndex, groupEndIndex, bounds);
+    }
+  }
 }
 
 template <> std::string PmergeMe<std::vector<int> >::getContainerType() const {

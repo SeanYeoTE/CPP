@@ -55,13 +55,16 @@ class PmergeMe {
         void recursiveSort(const T &pairs);
         void mergePairs(T &result, const T &left, const T &right);
         void insertion();
-        void main_pend_seperation(T &main_chain, T &pend_chain, T &remain_chain);
+        void main_pend_seperation(T &main_chain, T &pend_chain, T &remain_chain, T &bounds);
         std::vector<int> generateJacobsthalSequence(int n);
         void insertElement(int element);
+        void insertGroupIntoMainChain(T &main_chain, T &pend_chain, size_t groupStartIndex, size_t groupEndIndex, T &bounds);
+        void insertJacobsthalGroups(T &main_chain, T &pend_chain, const std::vector<int>& jacobsthal, size_t num_pend_elements, T &bounds);
+        void insertRemainingGroups(T &main_chain, T &pend_chain);
         template <typename U>
         int binarySearch(int value, int left, int right, const U& arr);
         template <typename U>
-        int binarySearchWithBound(int value, int element_size, int right, const U& arr);
+        int binarySearchWithBound(int value, int right, const U& arr);
         std::string getContainerType() const;
 };
 

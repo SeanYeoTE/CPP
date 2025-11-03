@@ -55,7 +55,7 @@ void displayArray(const T &original, const T &data) {
     std::cout << " ";
     std::cout << original[i];
   }
-  std::cout << "\n" << GREEN << "After : " << RESET;
+  std::cout << "\n" << GREEN << "After :" << RESET;
   for (long unsigned int i = 0; i < data.size(); ++i) {
     std::cout << " ";
     std::cout << data[i];
