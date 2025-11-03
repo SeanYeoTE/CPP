@@ -114,36 +114,16 @@ template <typename T> void PmergeMe<T>::recursiveSort(const T &pairs) {
   }
   bool proceed = true;
   for (int size = 4; size <= n; size *= 2) {
-    std::cout << MAGENTA << "Recursive sort with size: " << size << RESET
-              << std::endl;
-    // int element_count = 0;
     for (int left_start = 0; left_start < n; left_start += size) {
       int mid = left_start + size / 2;
       int right_end = left_start + size;
       if (right_end > n) {
         right_end = n;
-        // proceed = false;
         break;
       }
-      // element_count += size;
-      
-      std::cout << CYAN << "Left start: " << left_start
-                << ", Mid: " << mid << ", Right end: " << right_end
-                << RESET << std::endl;
-    
       T left(pairs.begin() + left_start, pairs.begin() + mid);
       T right(pairs.begin() + mid, pairs.begin() + right_end);
       if (proceed) {
-        // print left and right before merging
-        std::cout << CYAN << "Merging left: ";
-        for (size_t i = 0; i < left.size(); ++i) {
-          std::cout << left[i] << " ";
-        }
-        std::cout << " and right: ";
-        for (size_t i = 0; i < right.size(); ++i) {
-          std::cout << right[i] << " ";
-        }
-        std::cout << RESET << std::endl;
         T merged;
         mergePairs(merged, left, right);
         for (size_t i = 0; i < merged.size(); ++i) {
@@ -161,9 +141,9 @@ template <typename T> void PmergeMe<T>::insertion() {
   T remain_chain;
   T bounds;
 
-  std::cout << YELLOW << "Final size: " << _final_size << RESET << std::endl;
+  // std::cout << YELLOW << "Final size: " << _final_size << RESET << std::endl;
   main_pend_seperation(main_chain, pend_chain, remain_chain, bounds);
-  printchains(main_chain, pend_chain, remain_chain);
+  // printchains(main_chain, pend_chain, remain_chain);
 
   size_t num_pend_elements = pend_chain.size() / _final_size;
   std::vector<int> jacobsthal = generateJacobsthalSequence(num_pend_elements + 1);
@@ -184,7 +164,7 @@ template <typename T> void PmergeMe<T>::insertion() {
     // Prepare for next recursion level: main_chain becomes the new _pairs
     _pairs = main_chain;
     _final_size = _final_size / 2;
-    printpairs(_pairs, 1, 2);
+    // printpairs(_pairs, 1, 2);
     insertion();
   } else {
     // Base case: we've reached individual elements, copy to _data
@@ -207,8 +187,8 @@ template <typename T> void PmergeMe<T>::fordJohnsonSort() {
     }
   } else {
     recursiveSort(_pairs);
-    std::cout << MAGENTA << "After recursiveSort:" << RESET << std::endl;
-    printpairs(_pairs, 1, 2);
+    // std::cout << MAGENTA << "After recursiveSort:" << RESET << std::endl;
+    // printpairs(_pairs, 1, 2);
     if (_original.size() > 3) {
       _final_size = _final_size / 2;
       insertion();
@@ -260,11 +240,11 @@ void PmergeMe<T>::main_pend_seperation(T &main_chain, T &pend_chain,
       }
     }
   }
-  std::cout << CYAN << "Bounds: ";
-  for (size_t i = 0; i < bounds.size(); ++i) {
-    std::cout << bounds[i] << " ";
-  }
-  std::cout << RESET << std::endl;
+  // std::cout << CYAN << "Bounds: ";
+  // for (size_t i = 0; i < bounds.size(); ++i) {
+  //   std::cout << bounds[i] << " ";
+  // }
+  // std::cout << RESET << std::endl;
   // remain_chain for any leftover elements
   size_t processed = num_elements * element_size;
   remain_chain.insert(remain_chain.end(), _pairs.begin() + processed,
@@ -301,6 +281,7 @@ int PmergeMe<T>::binarySearchWithBound(int value, int right,
       break;
     }
   }
+  // use iterator to find index of value in bounds
 
   // Perform binary search on the bounds array
   int left = 0;
@@ -313,7 +294,6 @@ int PmergeMe<T>::binarySearchWithBound(int value, int right,
       left = mid + 1;
     }
   }
-
   // Convert back to original array position by multiplying by _final_size
   return left * _final_size;
 }
@@ -331,11 +311,11 @@ std::vector<int> PmergeMe<T>::generateJacobsthalSequence(int n) {
       break;
     jacobsthal.push_back(next);
   }
-  std::cout << CYAN << "Jacobsthal sequence up to " << n << ": " << RESET;
-  for (size_t i = 0; i < jacobsthal.size(); ++i) {
-    std::cout << jacobsthal[i] << " ";
-  }
-  std::cout << std::endl;
+  // std::cout << CYAN << "Jacobsthal sequence up to " << n << ": " << RESET;
+  // for (size_t i = 0; i < jacobsthal.size(); ++i) {
+  //   std::cout << jacobsthal[i] << " ";
+  // }
+  // std::cout << std::endl;
 
   return jacobsthal;
 }
@@ -356,17 +336,17 @@ template <typename T> void PmergeMe<T>::insertElement(int element) {
 
 template <typename T>
 void PmergeMe<T>::insertGroupIntoMainChain(T &main_chain, T &pend_chain, size_t groupStartIndex, size_t groupEndIndex, T &bounds) {
-  std::cout << GREEN << "Pend group to insert: ";
-  for (size_t k = groupStartIndex; k <= groupEndIndex; ++k) {
-    std::cout << pend_chain[k] << " ";
-  }
-  std::cout << RESET << std::endl;
+  // std::cout << GREEN << "Pend group to insert: ";
+  // for (size_t k = groupStartIndex; k <= groupEndIndex; ++k) {
+  //   std::cout << pend_chain[k] << " ";
+  // }
+  // std::cout << RESET << std::endl;
   
-  int boundValue = -1;
+  int boundValue = main_chain[main_chain.size() - 1];
   int boundIndex = -1;
   if (!bounds.empty()) {
-    std::cout << GREEN << "Finding bound for pend element "
-              << pend_chain[groupEndIndex] << RESET << std::endl;
+    // std::cout << GREEN << "Finding bound for pend element "
+    //           << pend_chain[groupEndIndex] << RESET << std::endl;
     for (size_t i = 0; i < bounds.size(); ++i) {
       if (bounds[i] == pend_chain[groupEndIndex]) {
         boundIndex = i;
@@ -374,16 +354,10 @@ void PmergeMe<T>::insertGroupIntoMainChain(T &main_chain, T &pend_chain, size_t 
       }
     }
     boundIndex++; // move to next as the max bound for insertion
-    if (boundIndex >= static_cast<int>(bounds.size())) {
+    if (boundIndex < static_cast<int>(bounds.size())) {
       // If no larger bound, insert at end
-      boundValue = main_chain[main_chain.size() - 1];
-    }
-    else {
       boundValue = bounds[boundIndex];
     }
-  }
-  else {
-    boundValue = main_chain[main_chain.size() - 1];
   }
   int insert_pos = binarySearchWithBound(pend_chain[groupEndIndex], boundValue, main_chain);
 
@@ -392,7 +366,7 @@ void PmergeMe<T>::insertGroupIntoMainChain(T &main_chain, T &pend_chain, size_t 
                     pend_chain.begin() + groupStartIndex,
                     pend_chain.begin() + groupEndIndex + 1);
 
-  printpairs(main_chain, 1, 2);
+  // printpairs(main_chain, 1, 2);
 
   // Remove the inserted elements from pend_chain
   pend_chain.erase(pend_chain.begin() + groupStartIndex,
@@ -405,8 +379,8 @@ void PmergeMe<T>::insertJacobsthalGroups(T &main_chain, T &pend_chain, const std
   // Start from second Jacobsthal number (index 1)
   for (size_t jacobsthalIndex = 1; jacobsthalIndex < jacobsthal.size(); ++jacobsthalIndex) {
     int groupsToInsert = jacobsthal[jacobsthalIndex] - jacobsthal[jacobsthalIndex - 1];
-    std::cout << GREEN << "Inserting " << groupsToInsert << " pend element groups"
-              << RESET << std::endl;
+    // std::cout << GREEN << "Inserting " << groupsToInsert << " pend element groups"
+    //           << RESET << std::endl;
 
     if (groupsToInsert > static_cast<int>(num_pend_elements))
       break;
@@ -429,8 +403,8 @@ void PmergeMe<T>::insertRemainingGroups(T &main_chain, T &pend_chain) {
   bounds.clear();
   while (!pend_chain.empty()) {
     int num_remaining_groups = pend_chain.size() / _final_size;
-    std::cout << GREEN << "Inserting remaining " << num_remaining_groups
-              << " pend element groups" << RESET << std::endl;
+    // std::cout << GREEN << "Inserting remaining " << num_remaining_groups
+    //           << " pend element groups" << RESET << std::endl;
 
     for (int currentGroupIndex = num_remaining_groups - 1; currentGroupIndex >= 0; --currentGroupIndex) {
       size_t groupEndIndex = currentGroupIndex * _final_size + _final_size - 1;
