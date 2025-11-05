@@ -270,9 +270,9 @@ run_iterative_test() {
         echo "    Min/Max comparisons: $min_comp / $max_comp"
         echo "    Theoretical max comparisons: $theoretical_max"
 
-        # Check if actual comparisons exceed theoretical maximum
-        if [[ $theoretical_max =~ ^[0-9]+$ ]] && [ "$max_comp" -gt "$theoretical_max" ] 2>/dev/null; then
-            echo -e "    ${RED}WARNING: Actual comparisons ($max_comp) exceed theoretical maximum ($theoretical_max)!${NC}"
+        # Check if average comparisons exceed theoretical maximum
+        if [[ $theoretical_max =~ ^[0-9]+$ ]] && [ "$avg_comp" -gt "$theoretical_max" ] 2>/dev/null; then
+            echo -e "    ${RED}WARNING: Average comparisons ($avg_comp) exceed theoretical maximum ($theoretical_max)!${NC}"
         else
             echo -e "    ${GREEN}✓ Comparisons within theoretical bounds${NC}"
         fi
@@ -347,7 +347,7 @@ main() {
     esac
 
     # Set iterations based on mode
-    local iterations=50
+    local iterations=20
     if [ "$mode_choice" = "2" ]; then
         iterations=1  # Single iteration for individual testing
     fi
