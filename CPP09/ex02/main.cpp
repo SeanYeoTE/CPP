@@ -11,8 +11,8 @@ int main(int argc, char **argv) {
     PmergeMe<std::vector<int> > pmergeMe;
     pmergeMe.processInput(argc, argv);
 
-    PmergeMe<std::deque<int> > pmergeMeDeque;
-    pmergeMeDeque.processInput(argc, argv);
+    // PmergeMe<std::deque<int> > pmergeMeDeque;
+    // pmergeMeDeque.processInput(argc, argv);
 
     displayArray(pmergeMe.getOriginal(), pmergeMe.getData());
 
@@ -20,8 +20,8 @@ int main(int argc, char **argv) {
                    pmergeMe.getComparisons(), "vector");
 
     // displayArray(pmergeMeDeque.getOriginal(), pmergeMeDeque.getData());
-    displayResults(pmergeMeDeque.getOriginal(), pmergeMeDeque.getTime(),
-                   pmergeMeDeque.getComparisons(), "deque");
+    // displayResults(pmergeMeDeque.getOriginal(), pmergeMeDeque.getTime(),
+    //                pmergeMeDeque.getComparisons(), "deque");
   } catch (const std::exception &e) {
     std::cerr << "Error: " << e.what() << std::endl;
     return 1;

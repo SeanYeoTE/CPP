@@ -48,9 +48,11 @@ class PmergeMe {
         bool _hasOddElement;
         int _oddElement;
         size_t _final_size;
+        int _lastelementused;
 
         bool compare(int a, int b);
         bool check_valid_index(size_t index, size_t size);
+        void update_bound(T &bounds);
         void pairElements();
         void recursiveSort(const T &pairs);
         void mergePairs(T &result, const T &left, const T &right);
@@ -64,7 +66,7 @@ class PmergeMe {
         template <typename U>
         int binarySearch(int value, int left, int right, const U& arr);
         template <typename U>
-        int binarySearchWithBound(int value, int right, const U& arr);
+        int binarySearchWithBound(int value, int right, const U& arr, bool hasbond);
         std::string getContainerType() const;
 };
 
