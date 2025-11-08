@@ -19,7 +19,7 @@ RPN::~RPN() {
 }
 
 
-double RPN::calculate() {
+double RPN::Calculate() {
     
     std::istringstream iss(_expression);
     std::string token;

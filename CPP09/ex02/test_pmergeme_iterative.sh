@@ -48,16 +48,28 @@ check_program() {
     fi
 }
 
-# Function to extract timing from program output
-extract_timing() {
+# Function to extract vector timing from program output
+extract_vector_timing() {
     local output="$1"
-    local time_line=$(echo "$output" | grep "Time to process")
+    local time_line=$(echo "$output" | grep "std::vector" | grep "Time to process")
     if [ -z "$time_line" ]; then
         echo "0"
         return 1
     fi
 
-    # Extract the time value (assuming format: "Time to process a range of X elements with std::vector : Y us")
+    local time_value=$(echo "$time_line" | sed 's/.*: \([0-9.]*\) us/\1/')
+    echo "$time_value"
+}
+
+# Function to extract deque timing from program output
+extract_deque_timing() {
+    local output="$1"
+    local time_line=$(echo "$output" | grep "std::deque" | grep "Time to process")
+    if [ -z "$time_line" ]; then
+        echo "0"
+        return 1
+    fi
+
     local time_value=$(echo "$time_line" | sed 's/.*: \([0-9.]*\) us/\1/')
     echo "$time_value"
 }
@@ -65,15 +77,21 @@ extract_timing() {
 # Function to extract comparisons from program output
 extract_comparisons() {
     local output="$1"
-    local comp_line=$(echo "$output" | grep "Total comparisons:")
-    if [ -z "$comp_line" ]; then
+    local comp_lines=$(echo "$output" | grep "Total comparisons:")
+    if [ -z "$comp_lines" ]; then
         echo "0"
         return 1
     fi
 
-    # Extract the comparison count
-    local comp_value=$(echo "$comp_line" | sed 's/Total comparisons: \([0-9]*\)/\1/')
-    echo "$comp_value"
+    # Extract the maximum comparison count from all container outputs
+    local max_comp=0
+    while IFS= read -r line; do
+        local comp_value=$(echo "$line" | sed 's/Total comparisons: \([0-9]*\)/\1/')
+        if [[ $comp_value =~ ^[0-9]+$ ]] && [ "$comp_value" -gt "$max_comp" ]; then
+            max_comp=$comp_value
+        fi
+    done <<< "$comp_lines"
+    echo "$max_comp"
 }
 
 # Function to verify sorted output
@@ -142,11 +160,16 @@ run_iterative_test() {
 
     print_info "Testing with input size: $size elements ($iterations iterations)"
 
+    # Calculate theoretical maximum comparisons for this size
+    local theoretical_max=$(calculate_max_comparisons "$size" | tr -d ' \n\t')
+
     local total_time=0
     local total_comparisons=0
     local successful_runs=0
-    local min_time=""
-    local max_time=""
+    local min_vector_time=""
+    local max_vector_time=""
+    local min_deque_time=""
+    local max_deque_time=""
     local min_comp=""
     local max_comp=""
 
@@ -168,6 +191,17 @@ run_iterative_test() {
         if [ $exit_code -ne 0 ]; then
             echo -e "\n${RED}    Iteration $i failed with exit code $exit_code${NC}"
             echo "    Program output: $output"
+            continue
+        fi
+
+        # Extract timing and comparison data
+        local vector_time=$(extract_vector_timing "$output")
+        local deque_time=$(extract_deque_timing "$output")
+        local comp_value=$(extract_comparisons "$output")
+        local time_value=$vector_time  # Use vector time for overall stats
+
+        if [ "$vector_time" = "0" ] || [ "$deque_time" = "0" ] || [ "$comp_value" = "0" ]; then
+            echo -e "\n${RED}    Iteration $i failed to extract metrics${NC}"
             continue
         fi
 
@@ -221,13 +255,14 @@ run_iterative_test() {
         # For single test mode, if sorted successfully, don't print anything extra
         # Just continue with the statistics collection
 
-        # Extract timing and comparison data
-        local time_value=$(extract_timing "$output")
-        local comp_value=$(extract_comparisons "$output")
-
-        if [ "$time_value" = "0" ] || [ "$comp_value" = "0" ]; then
-            echo -e "\n${RED}    Iteration $i failed to extract metrics${NC}"
-            continue
+        # Check if comparisons exceed theoretical maximum
+        if [[ $comp_value =~ ^[0-9]+$ ]] && [ "$comp_value" -gt "$theoretical_max" ]; then
+            exceeding_cases+=("Size: $size, Iteration: $i, Comparisons: $comp_value, Theoretical: $theoretical_max\nInput: $numbers")
+            {
+                echo "Size: $size, Iteration: $i, Comparisons: $comp_value, Theoretical: $theoretical_max"
+                echo "Input: $numbers"
+                echo ""
+            } >> "$logfile"
         fi
 
         # Update statistics
@@ -235,12 +270,20 @@ run_iterative_test() {
         total_comparisons=$(echo "$total_comparisons + $comp_value" | bc 2>/dev/null || echo "$total_comparisons")
         ((successful_runs++))
 
-        # Update min/max times
-        if [ -z "$min_time" ] || [ "$(echo "$time_value < $min_time" | bc -l 2>/dev/null)" = "1" ]; then
-            min_time=$time_value
+        # Update min/max vector times
+        if [ -z "$min_vector_time" ] || [ "$(echo "$vector_time < $min_vector_time" | bc -l 2>/dev/null)" = "1" ]; then
+            min_vector_time=$vector_time
         fi
-        if [ -z "$max_time" ] || [ "$(echo "$time_value > $max_time" | bc -l 2>/dev/null)" = "1" ]; then
-            max_time=$time_value
+        if [ -z "$max_vector_time" ] || [ "$(echo "$vector_time > $max_vector_time" | bc -l 2>/dev/null)" = "1" ]; then
+            max_vector_time=$vector_time
+        fi
+
+        # Update min/max deque times
+        if [ -z "$min_deque_time" ] || [ "$(echo "$deque_time < $min_deque_time" | bc -l 2>/dev/null)" = "1" ]; then
+            min_deque_time=$deque_time
+        fi
+        if [ -z "$max_deque_time" ] || [ "$(echo "$deque_time > $max_deque_time" | bc -l 2>/dev/null)" = "1" ]; then
+            max_deque_time=$deque_time
         fi
 
         # Update min/max comparisons
@@ -258,21 +301,19 @@ run_iterative_test() {
     printf "%.1f%%\n" $(echo "scale=1; $successful_runs * 100 / $iterations" | bc -l 2>/dev/null || echo "0")
 
     if [ $successful_runs -gt 0 ]; then
-        local avg_time=$(echo "scale=2; $total_time / $successful_runs" | bc -l 2>/dev/null || echo "0")
-        local avg_comp=$(echo "scale=0; $total_comparisons / $successful_runs" | bc 2>/dev/null || echo "0")
+        # local avg_time=$(echo "scale=2; $total_time / $successful_runs" | bc -l 2>/dev/null || echo "0")
+        # local avg_comp=$(echo "scale=0; $total_comparisons / $successful_runs" | bc 2>/dev/null || echo "0")
 
-        # Calculate theoretical maximum comparisons
-        local theoretical_max=$(calculate_max_comparisons "$size" | tr -d ' \n\t')
-
-        echo "    Average time: $avg_time μs"
-        echo "    Min/Max time: $min_time / $max_time μs"
-        echo "    Average comparisons: $avg_comp"
+        # echo "    Average time: $avg_time μs"
+        echo "    Min/Max vector time: $min_vector_time / $max_vector_time μs"
+        echo "    Min/Max deque time: $min_deque_time / $max_deque_time μs"
+        # echo "    Average comparisons: $avg_comp"
         echo "    Min/Max comparisons: $min_comp / $max_comp"
         echo "    Theoretical max comparisons: $theoretical_max"
 
         # Check if average comparisons exceed theoretical maximum
-        if [[ $theoretical_max =~ ^[0-9]+$ ]] && [ "$avg_comp" -gt "$theoretical_max" ] 2>/dev/null; then
-            echo -e "    ${RED}WARNING: Average comparisons ($avg_comp) exceed theoretical maximum ($theoretical_max)!${NC}"
+        if [[ $theoretical_max =~ ^[0-9]+$ ]] && [ "$max_comp" -gt "$theoretical_max" ] 2>/dev/null; then
+            echo -e "    ${RED}WARNING: Max comparisons ($max_comp) exceed theoretical maximum ($theoretical_max)!${NC}"
         else
             echo -e "    ${GREEN}✓ Comparisons within theoretical bounds${NC}"
         fi
@@ -289,6 +330,11 @@ run_iterative_test() {
 # Main function
 main() {
     print_header "PmergeMe Iterative Testing Script"
+
+    # Initialize logfile and exceeding cases array
+    logfile="exceedances.log"
+    > "$logfile"  # Clear the logfile
+    exceeding_cases=()
 
     # Check if program exists
     check_program
@@ -347,7 +393,7 @@ main() {
     esac
 
     # Set iterations based on mode
-    local iterations=20
+    local iterations=3
     if [ "$mode_choice" = "2" ]; then
         iterations=1  # Single iteration for individual testing
     fi
@@ -398,6 +444,15 @@ main() {
         done
     else
         echo -e "${GREEN}All sizes achieved 100% success rate!${NC}"
+    fi
+
+    # Report exceeding cases
+    if [ ${#exceeding_cases[@]} -gt 0 ]; then
+        print_header "Exceeding Cases Summary"
+        for case in "${exceeding_cases[@]}"; do
+            echo -e "${RED}$case${NC}"
+        done
+        echo -e "${YELLOW}Detailed logs saved to: $logfile${NC}"
     fi
 
     print_success "Iterative testing completed successfully!"

@@ -9,8 +9,8 @@ BitcoinExchange::BitcoinExchange() {
     while (std::getline(file, line))
     {
         size_t delimiter = line.find(',');
-        std::string date = trim(line.substr(0, delimiter));
-        std::string value = trim(line.substr(delimiter + 1, line.length()));
+        std::string date = Trim(line.substr(0, delimiter));
+        std::string value = Trim(line.substr(delimiter + 1, line.length()));
 
         _data[date] = value;
     }
@@ -34,7 +34,7 @@ BitcoinExchange &BitcoinExchange::operator= (const BitcoinExchange &other)
 BitcoinExchange::~BitcoinExchange() {}
 
 
-std::string BitcoinExchange::trim(const std::string &str)
+std::string BitcoinExchange::Trim(const std::string &str)
 {
     size_t first = str.find_first_not_of(' ');
     if (std::string::npos == first)
@@ -44,7 +44,7 @@ std::string BitcoinExchange::trim(const std::string &str)
     return str.substr(first, (last - first + 1));
 }
 
-bool BitcoinExchange::valid_date(const std::string &date)
+bool BitcoinExchange::ValidDate(const std::string &date)
 {
     if (date.length() != 10)
         return false;
@@ -80,7 +80,7 @@ bool BitcoinExchange::valid_date(const std::string &date)
     return true;
 }
 
-void BitcoinExchange::validate_value(const std::string &value)
+void BitcoinExchange::ValidateValue(const std::string &value)
 {
     // Check if the string is a valid number format
     bool hasDecimal = false;
@@ -123,7 +123,7 @@ void BitcoinExchange::validate_value(const std::string &value)
 }
 
 
-void BitcoinExchange::run(const std::string filename)
+void BitcoinExchange::Run(const std::string filename)
 {
     // check file;
     // file exists?
@@ -155,34 +155,34 @@ void BitcoinExchange::run(const std::string filename)
             std::cout << "Error: bad input => " << line << std::endl; 
             continue;
         }
-        std::string date = trim(line.substr(0, delimiter));
-        std::string value = trim(line.substr(delimiter + 1));
-        
+        std::string date = Trim(line.substr(0, delimiter));
+        std::string value = Trim(line.substr(delimiter + 1));
+
         // Validate and process the line
-        processLine(date, value);
+        ProcessLine(date, value);
     }
     file.close();
 }
 
-void BitcoinExchange::processLine(const std::string& date, const std::string& value)
+void BitcoinExchange::ProcessLine(const std::string& date, const std::string& value)
 {
     try {
         // Validate date format
-        if (!valid_date(date)) {
+        if (!ValidDate(date)) {
             throw std::invalid_argument("bad input => " + date);
             return;
         }
-        
+
         // Validate value
         if (value.empty()) {
             throw std::invalid_argument("bad input => " + value);
             return;
         }
-        
-        validate_value(value);
-        
+
+        ValidateValue(value);
+
         // Find exchange rate and calculate result
-        double exchangeRate = findExchangeRate(date);
+        double exchangeRate = FindExchangeRate(date);
         double inputValue = std::atof(value.c_str());
         double result = inputValue * exchangeRate;
         
@@ -193,7 +193,7 @@ void BitcoinExchange::processLine(const std::string& date, const std::string& va
     }
 }
 
-double BitcoinExchange::findExchangeRate(const std::string& date)
+double BitcoinExchange::FindExchangeRate(const std::string& date)
 {
     // Try to find exact match first
     std::map<std::string, std::string>::iterator it = _data.find(date);

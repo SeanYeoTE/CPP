@@ -13,11 +13,11 @@ class BitcoinExchange {
     private:
         std::map<std::string, std::string> _data;
 
-        std::string trim(const std::string &str);
-        bool valid_date(const std::string &date);
-        void validate_value(const std::string &value);
-        void processLine(const std::string& date, const std::string& value);
-        double findExchangeRate(const std::string& date);
+        std::string Trim(const std::string &str);
+        bool ValidDate(const std::string &date);
+        void ValidateValue(const std::string &value);
+        void ProcessLine(const std::string& date, const std::string& value);
+        double FindExchangeRate(const std::string& date);
 
 
     public:
@@ -26,7 +26,7 @@ class BitcoinExchange {
         BitcoinExchange &operator=(const BitcoinExchange &other);
         ~BitcoinExchange();
 
-        void run(const std::string filename);
+        void Run(const std::string filename);
 };
 
 #endif

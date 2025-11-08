@@ -11,7 +11,7 @@ int main(int argc, char **argv)
     RPN rpn(argv[1]);
     try
     {
-        std::cout << rpn.calculate() << std::endl;
+        std::cout << rpn.Calculate() << std::endl;
     }
     catch (const std::exception &e)
     {

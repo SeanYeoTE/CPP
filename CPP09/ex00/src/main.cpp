@@ -9,7 +9,7 @@ int main(int argc, char **argv)
     }
 
     BitcoinExchange btc;
-    btc.run(argv[1]);
+    btc.Run(argv[1]);
 
     return 0;
 }
