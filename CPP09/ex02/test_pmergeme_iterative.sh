@@ -142,6 +142,9 @@ run_iterative_test() {
 
     print_info "Testing with input size: $size elements ($iterations iterations)"
 
+    # Calculate theoretical maximum comparisons for this size
+    local theoretical_max=$(calculate_max_comparisons "$size" | tr -d ' \n\t')
+
     local total_time=0
     local total_comparisons=0
     local successful_runs=0
@@ -230,6 +233,16 @@ run_iterative_test() {
             continue
         fi
 
+        # Check if comparisons exceed theoretical maximum
+        if [[ $comp_value =~ ^[0-9]+$ ]] && [ "$comp_value" -gt "$theoretical_max" ]; then
+            exceeding_cases+=("Size: $size, Iteration: $i, Comparisons: $comp_value, Theoretical: $theoretical_max, Input: $numbers")
+            {
+                echo "Size: $size, Iteration: $i, Comparisons: $comp_value, Theoretical: $theoretical_max"
+                echo "Input: $numbers"
+                echo ""
+            } >> "$logfile"
+        fi
+
         # Update statistics
         total_time=$(echo "$total_time + $time_value" | bc -l 2>/dev/null || echo "$total_time")
         total_comparisons=$(echo "$total_comparisons + $comp_value" | bc 2>/dev/null || echo "$total_comparisons")
@@ -258,21 +271,18 @@ run_iterative_test() {
     printf "%.1f%%\n" $(echo "scale=1; $successful_runs * 100 / $iterations" | bc -l 2>/dev/null || echo "0")
 
     if [ $successful_runs -gt 0 ]; then
-        local avg_time=$(echo "scale=2; $total_time / $successful_runs" | bc -l 2>/dev/null || echo "0")
-        local avg_comp=$(echo "scale=0; $total_comparisons / $successful_runs" | bc 2>/dev/null || echo "0")
+        # local avg_time=$(echo "scale=2; $total_time / $successful_runs" | bc -l 2>/dev/null || echo "0")
+        # local avg_comp=$(echo "scale=0; $total_comparisons / $successful_runs" | bc 2>/dev/null || echo "0")
 
-        # Calculate theoretical maximum comparisons
-        local theoretical_max=$(calculate_max_comparisons "$size" | tr -d ' \n\t')
-
-        echo "    Average time: $avg_time μs"
+        # echo "    Average time: $avg_time μs"
         echo "    Min/Max time: $min_time / $max_time μs"
-        echo "    Average comparisons: $avg_comp"
+        # echo "    Average comparisons: $avg_comp"
         echo "    Min/Max comparisons: $min_comp / $max_comp"
         echo "    Theoretical max comparisons: $theoretical_max"
 
         # Check if average comparisons exceed theoretical maximum
-        if [[ $theoretical_max =~ ^[0-9]+$ ]] && [ "$avg_comp" -gt "$theoretical_max" ] 2>/dev/null; then
-            echo -e "    ${RED}WARNING: Average comparisons ($avg_comp) exceed theoretical maximum ($theoretical_max)!${NC}"
+        if [[ $theoretical_max =~ ^[0-9]+$ ]] && [ "$max_comp" -gt "$theoretical_max" ] 2>/dev/null; then
+            echo -e "    ${RED}WARNING: Max comparisons ($max_comp) exceed theoretical maximum ($theoretical_max)!${NC}"
         else
             echo -e "    ${GREEN}✓ Comparisons within theoretical bounds${NC}"
         fi
@@ -289,6 +299,11 @@ run_iterative_test() {
 # Main function
 main() {
     print_header "PmergeMe Iterative Testing Script"
+
+    # Initialize logfile and exceeding cases array
+    logfile="exceedances.log"
+    > "$logfile"  # Clear the logfile
+    exceeding_cases=()
 
     # Check if program exists
     check_program
@@ -398,6 +413,15 @@ main() {
         done
     else
         echo -e "${GREEN}All sizes achieved 100% success rate!${NC}"
+    fi
+
+    # Report exceeding cases
+    if [ ${#exceeding_cases[@]} -gt 0 ]; then
+        print_header "Exceeding Cases Summary"
+        for case in "${exceeding_cases[@]}"; do
+            echo -e "${RED}$case${NC}"
+        done
+        echo -e "${YELLOW}Detailed logs saved to: $logfile${NC}"
     fi
 
     print_success "Iterative testing completed successfully!"

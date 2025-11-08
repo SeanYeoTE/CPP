@@ -146,8 +146,6 @@ template <typename T> void PmergeMe<T>::insertion() {
   T remain_chain;
   T bounds;
 
-  // std::cout << YELLOW << "Final size: " << _final_size << RESET << std::endl;
-  // if (_final_size == 1) {
   if (_hasOddElement) {
     _pairs.push_back(_oddElement);
     _hasOddElement = false;
@@ -178,7 +176,6 @@ template <typename T> void PmergeMe<T>::insertion() {
     // Prepare for next recursion level: main_chain becomes the new _pairs
     _pairs = main_chain;
     _final_size = _final_size / 2;
-    // printpairs(_pairs, 1, 2);
     insertion();
   } else {
     // Base case: we've reached individual elements, copy to _data
@@ -201,8 +198,10 @@ template <typename T> void PmergeMe<T>::fordJohnsonSort() {
     }
   } else {
     recursiveSort(_pairs);
-    // std::cout << MAGENTA << "After recursiveSort:" << RESET << std::endl;
-    // printpairs(_pairs, 1, 2);
+    if (DEBUG)
+    {
+      std::cout << RED << "Comparisons: " << _comparisons << RESET << std::endl;
+    }
     if (_original.size() > 3) {
       _final_size = _final_size / 2;
       insertion();
@@ -314,7 +313,6 @@ int PmergeMe<T>::binarySearchWithBound(int value, int right, const U &arr, bool 
     bounds.push_back(arr[i]);
     if (arr[i] == boundelement) {
       if (hasbond) {
-        // std::cout << "hiiiiiiiiiiiiiiiiii" << std::endl;
         bounds.pop_back();
       }
       break;
@@ -338,9 +336,10 @@ int PmergeMe<T>::binarySearchWithBound(int value, int right, const U &arr, bool 
       left = mid + 1;
     }
   }
-  // if (left == static_cast<int>(bounds.size()) - 1)
-  //   left++;
-  // std::cout << "left: " << left << " _final_size" << _final_size << std::endl;
+  if (DEBUG)
+  {
+    std::cout << "Comparisons: " << _comparisons << std::endl;
+  }
   // Convert back to original array position by multiplying by _final_size
   return left * _final_size;
 }
@@ -398,8 +397,6 @@ void PmergeMe<T>::insertGroupIntoMainChain(T &main_chain, T &pend_chain,
   int boundIndex = -1;
   if (!bounds.empty()) {
     hasbond = true;
-    // std::cout << GREEN << "Finding bound for pend element "
-    //           << pend_chain[groupEndIndex] << RESET << std::endl;
     for (size_t i = 0; i < bounds.size(); ++i) {
       if (bounds[i] == pend_chain[groupEndIndex]) {
         boundIndex = i;
@@ -410,14 +407,15 @@ void PmergeMe<T>::insertGroupIntoMainChain(T &main_chain, T &pend_chain,
     if (boundIndex > static_cast<int>(bounds.size()) - 1) {
       // If no larger bound, insert at end
       hasbond = false;
-      // boundValue = bounds[boundIndex];
       boundValue = -1;
     }
     else {
       boundValue = bounds[boundIndex];
     }
   }
-  // std::cout << "boundvalue:" << boundValue << std::endl;
+  if (DEBUG) {
+    std::cout << "boundvalue:" << boundValue << std::endl;
+  }
   int insert_pos =
       binarySearchWithBound(pend_chain[groupEndIndex], boundValue, main_chain, hasbond);
 
@@ -427,7 +425,6 @@ void PmergeMe<T>::insertGroupIntoMainChain(T &main_chain, T &pend_chain,
                     pend_chain.begin() + groupStartIndex,
                     pend_chain.begin() + groupEndIndex + 1);
 
-  // printpairs(main_chain, 1, 2);
   _lastelementused = pend_chain[groupEndIndex];
   // Remove the inserted elements from pend_chain
   pend_chain.erase(pend_chain.begin() + groupStartIndex,
@@ -445,9 +442,12 @@ void PmergeMe<T>::insertJacobsthalGroups(T &main_chain, T &pend_chain,
     _lastelementused = -1;
     int groupsToInsert =
         jacobsthal[jacobsthalIndex] - jacobsthal[jacobsthalIndex - 1];
-    if (groupsToInsert > static_cast<int>(num_pend_elements))
+        if (groupsToInsert > static_cast<int>(num_pend_elements))
       break;
-
+    if (DEBUG) {
+      std::cout << YELLOW << "Inserting " << groupsToInsert
+                << " groups by jacobsthal" << RESET << std::endl;
+    }
     // Insert groups starting from the back (highest index)
     for (int currentGroupIndex = groupsToInsert - 1; currentGroupIndex >= 0;
          --currentGroupIndex) {
@@ -455,11 +455,6 @@ void PmergeMe<T>::insertJacobsthalGroups(T &main_chain, T &pend_chain,
       size_t groupStartIndex = currentGroupIndex * _final_size;
       insertGroupIntoMainChain(main_chain, pend_chain, groupStartIndex,
                                groupEndIndex, bounds);
-      // bounds need to be updated;
-      // update_bound(main_chain, bounds)
-
-
-
 
     }
     
