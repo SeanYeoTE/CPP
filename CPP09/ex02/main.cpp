@@ -9,19 +9,19 @@ int main(int argc, char **argv) {
 
   try {
     PmergeMe<std::vector<int> > pmergeMe;
-    pmergeMe.processInput(argc, argv);
+    pmergeMe.ProcessInput(argc, argv);
 
-    // PmergeMe<std::deque<int> > pmergeMeDeque;
-    // pmergeMeDeque.processInput(argc, argv);
+    PmergeMe<std::deque<int> > pmergeMeDeque;
+    pmergeMeDeque.ProcessInput(argc, argv);
 
-    displayArray(pmergeMe.getOriginal(), pmergeMe.getData());
+    DisplayArray(pmergeMe.GetOriginal(), pmergeMe.GetData());
 
-    displayResults(pmergeMe.getOriginal(), pmergeMe.getTime(),
-                   pmergeMe.getComparisons(), "vector");
+    DisplayResults(pmergeMe.GetOriginal(), pmergeMe.GetTime(),
+                   pmergeMe.GetComparisons(), "vector");
 
-    // displayArray(pmergeMeDeque.getOriginal(), pmergeMeDeque.getData());
-    // displayResults(pmergeMeDeque.getOriginal(), pmergeMeDeque.getTime(),
-    //                pmergeMeDeque.getComparisons(), "deque");
+    // DisplayArray(pmergeMeDeque.GetOriginal(), pmergeMeDeque.GetData());
+    DisplayResults(pmergeMeDeque.GetOriginal(), pmergeMeDeque.GetTime(),
+                   pmergeMeDeque.GetComparisons(), "deque");
   } catch (const std::exception &e) {
     std::cerr << "Error: " << e.what() << std::endl;
     return 1;

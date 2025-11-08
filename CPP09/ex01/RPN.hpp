@@ -15,7 +15,7 @@ class RPN
         
         RPN();
     public:
-        double calculate();
+        double Calculate();
         RPN(const std::string &expression);
         RPN(const RPN &other);
         RPN &operator=(const RPN &other);

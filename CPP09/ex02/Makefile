@@ -13,7 +13,7 @@ $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJS) $(OBJS:.o=.d)
+	rm -f $(OBJS) $(OBJS:.o=.d) utils.o utils.d
 
 fclean: clean
 	rm -f $(TARGET)

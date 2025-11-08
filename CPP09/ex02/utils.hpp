@@ -15,7 +15,7 @@
 #define RESET "\033[0m"
 
 template <typename T>
-void printpairs(const T &pairs, int depth, int size) {
+void PrintPairs(const T &pairs, int depth, int size) {
   std::cout << CYAN << "Depth " << depth << ": " << RESET;
   std::cout << YELLOW << "Pairs: " << RESET;
   for (size_t i = 0; i < pairs.size(); i = i + size) {
@@ -31,7 +31,7 @@ void printpairs(const T &pairs, int depth, int size) {
 }
 
 template <typename T>
-void printchains(const T &main_chain, const T &pend_chain,
+void PrintChains(const T &main_chain, const T &pend_chain,
                  const T &remain_chain) {
   std::cout << BLUE << "Main chain: " << RESET;
   for (size_t i = 0; i < main_chain.size(); ++i) {
@@ -49,7 +49,7 @@ void printchains(const T &main_chain, const T &pend_chain,
 }
 
 template <typename T>
-void displayArray(const T &original, const T &data) {
+void DisplayArray(const T &original, const T &data) {
   std::cout << RED << "Before:" << RESET;
   for (long unsigned int i = 0; i < original.size(); ++i) {
     std::cout << " ";
@@ -64,11 +64,13 @@ void displayArray(const T &original, const T &data) {
 }
 
 template <typename T>
-void displayResults(const T &original, double time, long comparisons, const std::string &containerType) {
+void DisplayResults(const T &original, double time, long comparisons, const std::string &containerType) {
   std::cout << "Time to process a range of " << original.size()
             << " elements with std::" << containerType << " : " << time
-            << " us" << "\n"
-            << "Total comparisons: " << comparisons << std::endl;
+            << " us" << std::endl;
+
+  (void)comparisons;
+  // std::cout << "Total comparisons: " << comparisons << std::endl;
 }
 
 #endif
